@@ -4,7 +4,7 @@ import { MaterialModule } from "./material/material.module";
 import { KendoModule } from "./kendo/kenod.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { KpiComponent } from "./common-component/kpi-card-component/kpi-card.component";
 import { BarChartComponent } from "./common-component/bar-chart-component/bar-chart.component";
 import { NgChartsModule } from "ng2-charts";
