@@ -1,0 +1,316 @@
+<mat-card-content>
+    <div class="page-area" fxLayout="row wrap" fxFlex="100">
+        <div class="header-area" fxLayout="row" fxFlex="100" fxLayoutGap="15px" fxLayoutAlign="start center">
+            <button class="back-btn bgcolor-white fntcolor-grey3 p-l-15" (click)="navigateToRoute(false)"
+                mat-flat-button type="button">
+                <mat-icon>chevron_left</mat-icon>Back
+            </button>
+            <span fxFlex></span>
+            <button *ngIf="!isView" class="bgcolor-grey2 fntcolor-white" (click)="cancel()" mat-flat-button
+                type="button">
+                <mat-icon>clear</mat-icon>
+                Cancel
+            </button>
+            <button *ngIf="!isView" class="bgcolor-green2 fntcolor-white" (click)="save()" mat-flat-button
+                type="button">
+                <mat-icon>save</mat-icon>
+                Save
+            </button>
+            <button *ngIf="!isView" class="bgcolor-blue fntcolor-white" (click)="approve()" mat-flat-button
+                type="button">
+                <mat-icon>verified_user</mat-icon>
+                Approve
+            </button>
+        </div>
+
+        <mat-stepper [linear]="isLinear" #stepper>
+            <mat-step label="Products">
+                <div fxLayout="row" [formGroup]="form" fxLayoutGap="15px" fxFlex="100"
+                    fxLayoutAlign="space-around center">
+                    <div fxLayout="column" fxFlex="30">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Invoice Date</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="transactionDate" [(ngModel)]="currentDate">
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxFlex="30">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Invoice No</mat-label>
+                            <input matInput id="invoiceNo" name="invoiceNo" formControlName="invoiceNo"
+                                placeholder="InvoiceNo" maxlength="250">
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="30">
+                        <mat-form-field>
+                            <mat-label for="customerId">Customer</mat-label>
+                            <mat-select id="customerId" name="customerId" formControlName="customerId">
+                                <mat-option *ngFor="let customer of loadedCustomer"
+                                    [value]="customer.id">{{customer.name}}</mat-option>
+                            </mat-select>
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="10">
+                        <mat-label>Status</mat-label>
+                        <mat-slide-toggle id="isActive" name="isActive" class="m-t-15" formControlName="isActive">{{
+                            getStatusString() }}</mat-slide-toggle>
+
+                    </div>
+
+
+
+
+                </div>
+
+                <div fxLayout="row" [formGroup]="form" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="space-around left"
+                    style="text-align:left;">
+
+
+
+                    <div fxLayout="column" fxFlex="25">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Total Amount</mat-label>
+                            <input matInput type="number" [readonly]="true" min="0" id="totalAmout" name="totalAmout"
+                                formControlName="totalAmout" maxlength="15">
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <div fxLayout="row" [formGroup]="formProduct" fxLayoutGap="15px" fxFlex="100"
+                    fxLayoutAlign="start center">
+                    <div fxLayout="column" fxFlex="35">
+                        <mat-form-field>
+                            <mat-label for="productId">Product</mat-label>
+                            <mat-select id="productId" (selectionChange)="retriveSellprice()" name="productId"
+                                formControlName="product">
+                                <mat-option *ngFor="let product of loadedProduct"
+                                    [value]="product">{{product.name}}</mat-option>
+                            </mat-select>
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="25">
+                        <mat-form-field>
+                            <mat-label for="sellprice">Sellingprice</mat-label>
+                            <input matInput type="number" [readonly]="true" min="0" id="sellPrice" name="sellPrice"
+                                formControlName="sellPrice" maxlength="15">
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!-- <div fxLayout="column" fxFlex="25">
+                        <mat-form-field>
+                            <mat-label for="qoh">QOH</mat-label>
+                            <input matInput type="number" [readonly]="true" min="0" id="qoh" name="qoh"
+                                formControlName="qoh" maxlength="15">                           
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div> -->
+
+                    <div fxLayout="column" fxFlex="25">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Qty</mat-label>
+                            <input matInput type="number" min="0" id="qty" name="qty" formControlName="qty"
+                                maxlength="15">
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+
+                        <button class="back-btn bgcolor-white fntcolor-grey3 p-l-15" (click)="addProduct()"
+                            mat-flat-button type="button">
+                            <mat-icon>add</mat-icon>Add
+                        </button>
+                    </div>
+
+
+
+                </div>
+
+                <!-- <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="start center">
+                    <button class="back-btn bgcolor-white fntcolor-grey3 p-l-15" (click)="addProduct()" mat-flat-button
+                        type="button">
+                        <mat-icon>add</mat-icon>Add
+                    </button>
+                </div> -->
+
+                <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+                    <kendo-grid class="grid-height2" [data]="gridData" [selectable]="true" [pageSize]="state.take"
+                        [skip]="state.skip" [sort]="state.sort" [filter]="state.filter" [sortable]="true"
+                        [filterable]="true" (dataStateChange)="dataStateChange($event)" [pageable]="{ buttonCount: paginationConfig.buttonCount,
+                            info: paginationConfig.info,
+                            previousNext : paginationConfig.previousNext,
+                            type: paginationConfig.type,
+                            pageSizes: paginationConfig.pageSizes}">
+                        <kendo-grid-column field="productName" title="Product">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="qty" title="Quantity">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="sellPrice" title="SellPrice">
+                        </kendo-grid-column>
+
+                        <kendo-grid-command-column>
+                            <ng-template kendoGridCellTemplate let-dataItem>
+                                <button kendoButton matTooltip="Edit"
+                                    (click)="deleteProduct(dataItem)"><mat-icon>clear</mat-icon></button>
+                            </ng-template>
+                        </kendo-grid-command-column>
+                    </kendo-grid>
+
+                </div>
+
+
+
+
+            </mat-step>
+            <mat-step label="Payments">
+
+                <div fxLayout="row" [formGroup]="formPayment" fxLayoutGap="15px" fxFlex="100"
+                    fxLayoutAlign="start center">
+                    <div fxLayout="column" fxFlex="25">
+                        <mat-form-field>
+                            <mat-label for="paymentTypeId">PaymentType</mat-label>
+                            <mat-select id="paymentTypeId" (selectionChange)="checkpaymenttype()" name="paymentTypeId"
+                                formControlName="paymentType">
+                                <mat-option *ngFor="let paymentType of loadpaymentTypes"
+                                    [value]="paymentType">{{paymentType.name}} </mat-option>
+                            </mat-select>
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="25">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Amount</mat-label>
+                            <input matInput type="number" min="0" id="amount" name="amount" formControlName="amount"
+                                maxlength="15">
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="25">
+                        <mat-form-field appearance="outline" *ngIf="show">
+                            <mat-label>Cheque No</mat-label>
+                            <input matInput id="chequeNo" name="chequeNo" formControlName="chequeNo"
+                                placeholder="ChequeNo" maxlength="250">
+                            <mat-error *ngIf="show">
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div fxLayout="column" fxFlex="25">
+                        <mat-form-field appearance="outline" *ngIf="show">
+                            <mat-label>Cheque Date</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="chequeDate">
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                            <mat-error *ngIf="show">
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+                <div fxLayout="row" [formGroup]="formPayment" fxLayoutGap="15px" fxFlex="100"
+                    fxLayoutAlign="start center">
+                    <div fxLayout="column" fxFlex="50">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Note</mat-label>
+                            <input matInput id="note" name="note" formControlName="note" placeholder="Note"
+                                maxlength="250">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row" [formGroup]="form" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="start center">
+
+                    <div fxLayout="column" fxFlex="25">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Total Amount</mat-label>
+                            <input matInput type="number" [readonly]="true" min="0" id="totalPayment"
+                                name="totalPayment" formControlName="totalPayment" maxlength="15">
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxFlex="25">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Balance Payment</mat-label>
+                            <input matInput type="number" [readonly]="true" min="0" id="balancePayment"
+                                name="balancePayment" formControlName="balancePayment" maxlength="15">
+                            <mat-error>
+                                This is a required field.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="start center">
+                    <button class="back-btn bgcolor-white fntcolor-grey3 p-l-15" (click)="addPayments()" mat-flat-button
+                        type="button">
+                        <mat-icon>add</mat-icon>Add
+                    </button>
+                </div>
+
+                <div fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+                    <kendo-grid class="grid-height2" [data]="gridDataPayments" [selectable]="true"
+                        [pageSize]="statePayments.take" [skip]="statePayments.skip" [sort]="statePayments.sort"
+                        [filter]="statePayments.filter" [sortable]="true" [filterable]="true"
+                        (dataStateChange)="dataStateChangePayment($event)" [pageable]="{ buttonCount: paginationConfig.buttonCount,
+                            info: paginationConfig.info,
+                            previousNext : paginationConfig.previousNext,
+                            type: paginationConfig.type,
+                            pageSizes: paginationConfig.pageSizes}">
+                        <kendo-grid-column field="paymentTypeName" title="PaymentType">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="chequeNo" title="ChequeNo">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="chequeDate" title="ChequeDate">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="amount" title="Amount">
+                        </kendo-grid-column>
+                        <kendo-grid-command-column>
+                            <ng-template kendoGridCellTemplate let-datapayment>
+                                <button kendoButton matTooltip="Edit"
+                                    (click)="deletePayment(datapayment)"><mat-icon>clear</mat-icon></button>
+                            </ng-template>
+                        </kendo-grid-command-column>
+                    </kendo-grid>
+
+                </div>
+
+            </mat-step>
+        </mat-stepper>
+
+    </div>
+</mat-card-content>

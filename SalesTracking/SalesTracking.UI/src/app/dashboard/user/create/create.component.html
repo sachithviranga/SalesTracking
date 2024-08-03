@@ -1,0 +1,125 @@
+<mat-card-content>
+    <div class="page-area" fxLayout="row wrap" fxFlex="100" [formGroup]="form">
+        <div class="header-area" fxLayout="row" fxFlex="100" fxLayoutGap="15px" fxLayoutAlign="start center">
+            <button class="back-btn bgcolor-white fntcolor-grey3 p-l-15" (click)="navigateToRoute(false)"
+                mat-flat-button type="button">
+                <mat-icon>chevron_left</mat-icon>Back
+            </button>
+            <span fxFlex></span>
+            <button *ngIf="!isView" class="bgcolor-grey2 fntcolor-white" (click)="cancel()" mat-flat-button
+                type="button">
+                <mat-icon>clear</mat-icon>
+                Cancel
+            </button>
+            <button *ngIf="!isView" class="bgcolor-green2 fntcolor-white" (click)="save()" mat-flat-button
+                type="button">
+                <mat-icon>save</mat-icon>
+                Save
+            </button>
+        </div>
+        <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="space-around center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>First Name</mat-label>
+                    <input matInput id="firstName" name="firstName" formControlName="firstName" placeholder="FirstName"
+                        maxlength="250">
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput id="lastName" name="lastName" formControlName="lastName" placeholder="LastName"
+                        maxlength="250">
+                </mat-form-field>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="space-around center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Phone No</mat-label>
+                    <input matInput id="phoneNumber" name="phoneNumber" formControlName="phoneNumber"
+                        placeholder="PhoneNumber" maxlength="20">
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>User Name</mat-label>
+                    <input matInput id="email" name="email" formControlName="email" placeholder="Email" maxlength="250">
+                    <mat-error
+                        *ngIf="form.controls.email.errors?.['required'] && !form.controls.email.errors?.['pattern']">
+                        This is a required field.
+                    </mat-error>
+
+                    <mat-error
+                        *ngIf="!form.controls.email.errors?.['required'] && form.controls.email.errors?.['pattern']">
+                        Invalid email format.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div *ngIf="id == 0" fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="space-around center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" id="password" name="password" formControlName="password"
+                        placeholder="Password" maxlength="250">
+                    <mat-error *ngIf="form.controls.password.errors?.['required']">
+                        This is a required field.
+                    </mat-error>
+                    <mat-error *ngIf="form.controls.password.errors?.['minlength']">
+                        Password must be at least 6 characters.
+                    </mat-error>
+                    <mat-error *ngIf="form.controls.password.errors?.['maxlength']">
+                        Password must not exceed 40 characters.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Confirm Password</mat-label>
+                    <input matInput type="password" id="confirmpassword" name="confirmpassword"
+                        formControlName="confirmpassword" placeholder="Password" maxlength="250">
+                    <mat-error *ngIf="form.controls.confirmpassword.errors?.['required']">
+                        This is a required field.
+                    </mat-error>
+                    <mat-error *ngIf="form.controls.confirmpassword.errors?.['matching']">
+                        Confirm Password does not match.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="start center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field>
+                    <mat-label for="userRole">Roles</mat-label>
+                    <mat-select id="userRole" name="userRole" formControlName="userRole" multiple>
+                        <mat-select-trigger>
+                            {{getSelectedRoleName()}}
+                            <span *ngIf="(form.controls.userRole.value?.length || 0) > 1"
+                                class="example-additional-selection">
+                                (+{{(form.controls.userRole.value?.length || 0) - 1}}
+                                {{form.controls.userRole.value?.length === 2 ? 'other' :
+                                'others'}})
+                            </span>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let role of loadedRoles" [value]="role.id">{{role.roleName}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <mat-label>Status</mat-label>
+                <mat-slide-toggle id="isActive" name="isActive" class="m-t-15" formControlName="isActive">{{
+                    getStatusString() }}</mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+</mat-card-content>

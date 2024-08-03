@@ -1,0 +1,78 @@
+<!-- <div>Customer Create</div> -->
+
+<mat-card-content>
+    <div class="page-area" fxLayout="row wrap" fxFlex="100" [formGroup]="form">
+        <div class="header-area" fxLayout="row" fxFlex="100" fxLayoutGap="15px" fxLayoutAlign="start center">
+            <button class="back-btn bgcolor-white fntcolor-grey3 p-l-15" (click)="navigateToRoute(false)"
+                mat-flat-button type="button">
+                <mat-icon>chevron_left</mat-icon>Back
+            </button>
+            <span fxFlex></span>
+            <button class="bgcolor-grey2 fntcolor-white" (click)="cancel()" mat-flat-button type="button">
+                <mat-icon>clear</mat-icon>
+                Cancel
+            </button>
+            <!-- <button class="bgcolor-green2 fntcolor-white" (click)="save()" mat-flat-button type="button">
+                <mat-icon>save</mat-icon>
+                Save
+            </button> -->
+
+            <button *ngIf="!isView" class="bgcolor-green2 fntcolor-white" (click)="save()" mat-flat-button type="button">
+                <mat-icon>save</mat-icon>
+                Save
+            </button>
+
+        </div>
+        <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="space-around center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <input matInput id="name" name="name" formControlName="name" placeholder="Name"
+                        maxlength="250">
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Address</mat-label>
+                    <input matInput id="address" name="address" formControlName="address" placeholder="Address"
+                        maxlength="250">
+                </mat-form-field>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="space-around center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Phone No</mat-label>
+                    <input matInput id="phoneNo" name="phoneNo" formControlName="phoneNo"
+                        placeholder="PhoneNo" maxlength="20">
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field>
+                    <mat-label  for="customerTypeId">CustomerTypes</mat-label>
+                    <mat-select id="customerTypeId" name="customerTypeId" formControlName="customerTypeId" >
+                        <mat-option *ngFor="let customerType of customerTypes" [value]="customerType.id">{{customerType.name}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            
+        </div>
+        
+        <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="start center">           
+            <div fxLayout="column" fxFlex="50">
+                <mat-label>Status</mat-label>
+                <mat-slide-toggle id="isActive" name="isActive" class="m-t-15" formControlName="isActive">{{
+                getStatusString() }}</mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+</mat-card-content>

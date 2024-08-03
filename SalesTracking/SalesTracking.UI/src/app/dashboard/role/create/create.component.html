@@ -1,0 +1,117 @@
+<mat-card-content>
+    <div class="page-area" fxLayout="row wrap" fxFlex="100" [formGroup]="form">
+        <div class="header-area" fxLayout="row" fxFlex="100" fxLayoutGap="15px" fxLayoutAlign="start center">
+            <button class="back-btn bgcolor-white fntcolor-grey3 p-l-15" (click)="navigateToRoute(false)"
+                mat-flat-button type="button">
+                <mat-icon>chevron_left</mat-icon>Back
+            </button>
+            <span fxFlex></span>
+            <button *ngIf="!isView" class="bgcolor-grey2 fntcolor-white" (click)="cancel()" mat-flat-button
+                type="button">
+                <mat-icon>clear</mat-icon>
+                Cancel
+            </button>
+            <button *ngIf="!isView" class="bgcolor-green2 fntcolor-white" (click)="save()" mat-flat-button
+                type="button">
+                <mat-icon>save</mat-icon>
+                Save
+            </button>
+        </div>
+        <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="space-around center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Role Name</mat-label>
+                    <input matInput id="roleName" name="roleName" formControlName="roleName" placeholder="RoleName"
+                        maxlength="250">
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <mat-label>Status</mat-label>
+                <mat-slide-toggle id="isActive" name="isActive" class="m-t-15" formControlName="isActive">
+                    {{getStatusString() }}
+                </mat-slide-toggle>
+
+            </div>
+
+        </div>
+        <div fxLayout="row" fxLayoutGap="5px" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
+            <mat-accordion fxLayoutGap="5px" formArrayName="modules" style="margin-top:5px;margin-right:5px"
+                *ngFor="let module of moduleFromArray().controls; let i = index;">
+                <mat-expansion-panel [expanded]="true" [formGroupName]="i">
+                    <mat-expansion-panel-header>
+                        {{module.value.moduleName}}
+                    </mat-expansion-panel-header>
+                    <div formArrayName="claims">
+                        <mat-list-item fxLayout="row" *ngFor="let claim of claimFormArray(i).controls; let j = index">
+                            <div [formGroupName]="j">
+                                <mat-slide-toggle fxLayoutGap="10px" id="{{claim.value.claimId}}"
+                                    name="{{claim.value.claimId}}" class="m-t-15" formControlName="isActive" class="m-r-15">
+                                    {{claim.value.claimName}}
+                                </mat-slide-toggle>
+                            </div>
+                        </mat-list-item>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </div>
+        <!-- <div fxLayout="row" fxLayoutGap="5px" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
+            <ng-container>
+                <mat-expansion-panel [expanded]="true" formArrayName="modules"
+                    *ngFor="let module of moduleFromArray().controls; let i = index;"
+                    style="margin-top:5px;margin-right:5px">
+                    <div [formGroupName]="i">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{module.value.moduleName}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div formArrayName="claims">
+                            <mat-list-item fxLayout="row"
+                                *ngFor="let claim of claimFormArray(i).controls; let j = index">
+                                <div [formGroupName]="j">
+                                    <mat-slide-toggle fxLayoutGap="10px" id="{{claim.value.claimId}}"
+                                        name="{{claim.value.claimId}}" class="m-t-15" formControlName="id"
+                                        class="m-r-15">
+                                        {{claim.value.claimName}}
+                                    </mat-slide-toggle>
+                                </div>
+                            </mat-list-item>
+                        </div>
+
+                    </div>
+                </mat-expansion-panel>
+
+            </ng-container>
+
+        </div> -->
+
+
+        <!-- <div fxLayout="row" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="start center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field>
+                    <mat-label for="userRole">Roles</mat-label>
+                    <mat-select id="userRole" name="userRole" formControlName="userRole" multiple>
+                        <mat-select-trigger>
+                            {{getSelectedRoleName()}}
+                            <span *ngIf="(form.controls.userRole.value?.length || 0) > 1"
+                                class="example-additional-selection">
+                                (+{{(form.controls.userRole.value?.length || 0) - 1}}
+                                {{form.controls.userRole.value?.length === 2 ? 'other' :
+                                'others'}})
+                            </span>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let role of loadedRoles" [value]="role.id">{{role.roleName}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+           
+        </div> -->
+    </div>
+</mat-card-content>

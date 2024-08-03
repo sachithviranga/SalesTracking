@@ -1,0 +1,49 @@
+
+<mat-card-content>
+    <div class="page-area" fxLayout="row wrap" fxFlex="100">
+        <div class="header-area" fxLayout="row" fxFlex="100" fxLayoutGap="15px" fxLayoutAlign="start center">
+            <button class="back-btn bgcolor-white fntcolor-grey3 p-l-15" (click)="navigateToRoute(false)"
+                mat-flat-button type="button">
+                <mat-icon>chevron_left</mat-icon>Back
+            </button>
+            <span fxFlex></span>
+            <button class="bgcolor-darkblue fntcolor-white" (click)="navigateToPage()" mat-flat-button type="button">
+                <mat-icon>enhanced_encryption</mat-icon>
+                Add Stock
+            </button>
+        </div>
+        <div class="grid-area" fxFlex="100">
+            <kendo-grid class="grid-height2"
+                        [data]="gridData"
+                        [selectable]="true"
+                        [pageSize]="state.take"
+                        [skip]="state.skip"
+                        [sort]="state.sort"
+                        [filter]="state.filter"
+                        [sortable]="true"
+                        [filterable]="true"
+                        (dataStateChange)="dataStateChange($event)"
+                        [pageable]="{ buttonCount: paginationConfig.buttonCount,
+                            info: paginationConfig.info,
+                            previousNext : paginationConfig.previousNext,
+                            type: paginationConfig.type,
+                            pageSizes: paginationConfig.pageSizes}">             
+                <kendo-grid-column field="purchaseNo" title="Invoice No" >
+                </kendo-grid-column>
+                <kendo-grid-column field="transactionDate" title=" Invoice Date" >
+                </kendo-grid-column>
+                <kendo-grid-column field="totalAmount" title="Invoice Value" >
+                </kendo-grid-column>
+                
+                <!-- <kendo-grid-column field="displayOnlyAssignedRoles" >
+                </kendo-grid-column> -->
+                 <kendo-grid-command-column>
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <button kendoButton *ngIf="!dataItem.isApproved" matTooltip="Edit" (click)="navigateToPage(dataItem.id , false)"><mat-icon>edit</mat-icon></button>
+                        <button kendoButton matTooltip="View" (click)="navigateToPage(dataItem.id , true)"><mat-icon>visibility</mat-icon></button>
+                    </ng-template>
+                </kendo-grid-command-column>
+            </kendo-grid> 
+        </div>
+    </div>
+</mat-card-content> 

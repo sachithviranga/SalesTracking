@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Mappers\" />
+    <Folder Include="Wrappers\" />
+    <Folder Include="Validatoers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SalesTracking.Auth\SalesTracking.Auth.csproj" />
+    <ProjectReference Include="..\SalesTracking.Common\SalesTracking.Common.csproj" />
+    <ProjectReference Include="..\SalesTracking.Contracts\SalesTracking.Contracts.csproj" />
+    <ProjectReference Include="..\SalesTracking.Data\SalesTracking.Data.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,18 @@
+{
+    "ToastyConfig": {
+        "Theme": "material",
+        "Position": "top-right",
+        "Timeout": 5000,
+        "ShowClose": true
+      },
+      "KendoDatePickerConfig": {
+        "DateFromat": "dd/MM/yyyy",
+        "MinDate": "01/01/1900",
+        "MaxDate": "31/12/2100"
+      },
+      "IdleHandling": {
+        "IdleTimeInSeconds": "900",
+        "TimeOutTimeInSeconds": "60",
+        "PingTimeInSeconds": "15"
+      }
+}

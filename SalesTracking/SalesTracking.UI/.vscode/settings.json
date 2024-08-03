@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/4553cf05-a430-4f50-882e-c19db72ba513/resourceGroups/GASTECHENERGYLANKA/providers/Microsoft.Web/sites/GASTECH",
+    "appService.deploySubpath": "dist\\salestracking"
+}

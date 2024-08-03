@@ -1,0 +1,42 @@
+
+<section class="container">
+    <section class="wrapper">
+        <header>
+            <div class="logo">
+                <span>Logo</span>
+            </div>
+            <h1>Welcome back!</h1>
+            <p>User Login</p>
+        </header>
+        <section class="main-content">
+            <div [formGroup]="loginForm">
+                <mat-form-field class="input" appearance="outline">
+                    <mat-label>User Name</mat-label>
+                    <input matInput id="userName" name="userName" formControlName="userName" placeholder="userName"
+                        maxlength="250">
+                    <mat-error
+                        *ngIf="loginForm.controls.userName.errors?.['required'] && !loginForm.controls.userName.errors?.['pattern']">
+                        This is a required field.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="!loginForm.controls.userName.errors?.['required'] && loginForm.controls.userName.errors?.['pattern']">
+                        Invalid email format.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="input" appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" id="password" name="password" formControlName="password"
+                        placeholder="Password" maxlength="250">
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+                <button mat-raised-button color="primary" (click)="signing()"> Login</button>
+            </div>
+        </section>
+        <footer>
+            <!-- <p><a href="" title="Forgot Password">Forgot Password?</a></p> -->
+            <!-- <p><a href="" title="Register">Register</a></p> -->
+        </footer>
+    </section>
+</section>

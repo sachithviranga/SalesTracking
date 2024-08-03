@@ -1,0 +1,61 @@
+<mat-card-content>
+    <div class="page-area" fxLayout="row wrap" fxFlex="100" [formGroup]="form">
+        <div class="header-area" fxLayout="row" fxFlex="100" fxLayoutGap="15px" fxLayoutAlign="start center">
+            <button class="back-btn bgcolor-white fntcolor-grey3 p-l-15" (click)="navigateToRoute(false)"
+                mat-flat-button type="button">
+                <mat-icon>chevron_left</mat-icon>Back
+            </button>
+            <span fxFlex></span>
+            <button *ngIf="!isView" class="bgcolor-grey2 fntcolor-white" (click)="cancel()" mat-flat-button
+                type="button">
+                <mat-icon>clear</mat-icon>
+                Cancel
+            </button>
+            <button *ngIf="!isView" class="bgcolor-green2 fntcolor-white" (click)="save()" mat-flat-button
+                type="button">
+                <mat-icon>save</mat-icon>
+                Save
+            </button>
+        </div>
+        <div fxLayout="row" [formGroup]="form" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="space-around center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <input matInput id="name" name="name" formControlName="name" placeholder="Name" maxlength="250">
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <mat-label>Status</mat-label>
+                <mat-slide-toggle id="isActive" name="isActive" class="m-t-15" formControlName="isActive">{{
+                    getStatusString() }}</mat-slide-toggle>
+            </div>
+            
+
+        </div>
+        <div fxLayout="row" [formGroup]="formPrice" fxLayoutGap="15px" fxFlex="100" fxLayoutAlign="space-around center">
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Selling Price</mat-label>
+                    <input matInput id="sellPrice" type="number" min="0" name="sellPrice" formControlName="sellPrice" placeholder="SellPrice"
+                        maxlength="250">
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <mat-form-field appearance="outline">
+                    <mat-label>Unit Price</mat-label>
+                    <input matInput id="unitPrice" type="number" min="0" name="unitPrice" formControlName="unitPrice" placeholder="UnitPrice"
+                        maxlength="250">
+                    <mat-error>
+                        This is a required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>   
+</mat-card-content>
