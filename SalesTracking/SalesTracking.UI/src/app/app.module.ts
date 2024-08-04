@@ -17,6 +17,7 @@ import { AuthTokenHandlerService } from 'src/shared/services/global/authenciatio
 import { PaginationConfigService } from 'src/shared/services/global/pagination-config.service';
 import { LogoutHandlerService } from 'src/shared/services/global/logout-handler.service';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { ResponseInterceptor } from 'src/shared/services/interceptors/response-interceptor';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,11 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ResponseInterceptor,
       multi: true
     },
     {provide: LocationStrategy, useClass: HashLocationStrategy}],
