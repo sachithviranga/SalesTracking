@@ -19,7 +19,10 @@ export class ResponseInterceptor implements HttpInterceptor {
                 if (evt instanceof HttpResponse) { }
             }),
             catchError(err => {
-                if (err.status === 401 && this.authtoken.isTokenExpired()) {
+                if (err.status === 0) {
+                    this.notificationService.showCustomMsg('Connection Error', 'Connection error please contact adminstrator.', 'error');
+                }
+                else if (err.status === 401 && this.authtoken.isTokenExpired()) {
                     this.notificationService.showCustomMsg('Session Expired', 'Your session will be refreshed now.', 'error');
                     this.logoutService.logout();
                 } else {

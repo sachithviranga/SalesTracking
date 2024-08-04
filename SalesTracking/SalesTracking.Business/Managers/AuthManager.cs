@@ -27,9 +27,9 @@ namespace SalesTracking.Business.Managers
             _serviceResponseMapper = serviceResponseMapper;
         }
 
-        public LoginResponse Login(LoginDTO login)
+        public async Task<LoginResponse> Login(LoginDTO login)
         {
-            var user = _userRepository.GetUserByUserName(login.UserName);
+            var user = await _userRepository.GetUserByUserName(login.UserName);
             string token = string.Empty;
             bool canLogin = false;
             string errorMessage = string.Empty;

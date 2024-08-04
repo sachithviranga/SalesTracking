@@ -12,7 +12,7 @@ namespace SalesTracking.Contracts.Repositories
 {
     public interface IUserRepository
     {
-        public UserDTO GetUserByUserName(string email);
+        public Task<UserDTO> GetUserByUserName(string email);
         public List<UserDTO> GetUsers();
 
         public int AddUser(UserDTO user);

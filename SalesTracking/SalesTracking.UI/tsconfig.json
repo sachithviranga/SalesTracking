@@ -21,9 +21,10 @@
     "module": "ESNext",
     "resolveJsonModule": true,
     "esModuleInterop":true,
+    "useDefineForClassFields":false,
     "lib": [
-      "es2020",
-      "dom"
+      "ES2020",
+      "DOM"
     ]
   },
   "angularCompilerOptions": {

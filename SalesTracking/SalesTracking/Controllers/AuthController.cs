@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Auth;
 using SalesTracking.Entities.Common;
+using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
 {
@@ -18,9 +19,9 @@ namespace SalesTracking.Api.Controllers
         }
 
         [HttpPost("Login")]
-        public LoginResponse Login([FromBody] LoginDTO login)
+        public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
-            return _authManager.Login(login);
+            return Ok(await _authManager.Login(login));
         }
     }
 }

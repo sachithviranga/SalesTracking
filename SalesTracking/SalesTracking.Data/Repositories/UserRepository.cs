@@ -28,16 +28,16 @@ namespace SalesTracking.Data.Repositories
             _mapper = mapper;
         }
 
-        public UserDTO GetUserByUserName(string email)
+        public async Task<UserDTO> GetUserByUserName(string email)
         {
             try
             {
-                var user = _context.User
+                var user = await _context.User
                     .Where(u => u.Email.ToLower() == email.ToLower())
                     .Include(a => a.UserRole)
                     .ThenInclude(i => i.Role)
                     .ThenInclude(i => i.RoleClaim)
-                    .SingleOrDefault();
+                    .SingleOrDefaultAsync();
 
                 return _mapper.Map<UserDTO>(user);
             }

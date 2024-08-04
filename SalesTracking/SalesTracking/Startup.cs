@@ -89,11 +89,9 @@ namespace SalesTracking
 
             if (env.IsDevelopment())
             {
-
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
-
             }
 
             #region Configure Context
