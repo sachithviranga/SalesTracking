@@ -22,7 +22,7 @@ namespace SalesTracking.Api.Middleware
             }
             catch (InvalidCredentialException ex)
             {
-                await HandleExceptionAsync(context, ex, StatusCodes.Status401Unauthorized);
+                await HandleExceptionAsync(context, ex, StatusCodes.Status401Unauthorized, true);
             }
             catch (Exception ex)
             {
@@ -30,7 +30,7 @@ namespace SalesTracking.Api.Middleware
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception, int statusCode)
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception, int statusCode, bool isLogin = false)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
@@ -38,7 +38,8 @@ namespace SalesTracking.Api.Middleware
             var response = new
             {
                 StatusCode = statusCode,
-                exception.Message
+                exception.Message,
+                Login = isLogin
             };
 
             return context.Response.WriteAsJsonAsync(response);

@@ -9,6 +9,6 @@ namespace SalesTracking.Contracts.Managers
 {
     public interface IDashboardManager
     {
-        public ServiceResponse GetAvailableProdcuts();
+        public Task<ServiceResponse> GetAvailableProdcuts();
     }
 }

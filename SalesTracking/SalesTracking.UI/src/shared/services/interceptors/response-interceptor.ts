@@ -23,13 +23,15 @@ export class ResponseInterceptor implements HttpInterceptor {
                     this.notificationService.showCustomMsg('Connection Error', 'Connection error please contact adminstrator.', 'error');
                 }
                 else if (err.status === 401 && this.authtoken.isTokenExpired()) {
-                    this.notificationService.showCustomMsg('Session Expired', 'Your session will be refreshed now.', 'error');
-                    this.logoutService.logout();
+                    if (err.error.login)
+                        this.notificationService.showCustomMsg('Invalid Credential', err.error.message, 'error');
+                    else {
+                        this.notificationService.showCustomMsg('Session Expired', 'Your session will be refreshed now.', 'error');
+                        this.logoutService.logout();
+                    }
                 }
                 else {
-                    if (!this.authtoken.isTokenExpired()) {
-                        this.router.navigate(['./dashboard', {}]);
-                    }
+                    if (!this.authtoken.isTokenExpired()) this.router.navigate(['./dashboard', {}]);
                     else {
                         let message = err.error.message
                         this.notificationService.showCustomMsg('Error', message, 'error');

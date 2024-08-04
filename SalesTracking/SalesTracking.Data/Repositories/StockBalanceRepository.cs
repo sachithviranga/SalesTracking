@@ -53,22 +53,6 @@ namespace SalesTracking.Data.Repositories
                                                 .Select(s => new ProductDTO { Id = s.Id, Name = s.Name })
                                                 .ToList();
 
-
-
-
-
-                //List<ProductDTO> insufProducts = _context.StockBalance
-                //            .Include(i => i.Product)
-                //            .AsEnumerable()
-                //            .Where(s => CheckstockBalances.Any(x => x.ProductId == s.ProductId) && s.TransactionDate <= TransactionDate)
-                //            .GroupBy(x => new { x.ProductId, x.Product.Name })
-                //            .Select(x => new { ProductId = x.Key.ProductId, ProductName = x.Key.Name, BalanceQty = x.Sum(s => s.Qty) })
-                //            .Where(s => CheckstockBalances.Any(w => w.ProductId == s.ProductId && w.Qty > s.BalanceQty))
-                //            .Select(s => new ProductDTO { Id = s.ProductId, Name = s.ProductName })
-                //            .ToList();
-
-
-
                 products = insufProducts.ToList();
 
                 return !insufProducts.Any();
@@ -159,60 +143,49 @@ namespace SalesTracking.Data.Repositories
             }
         }
 
-
-
-        public List<ProductQtyDTO> GetAvaibleProductQty(bool isAllProduct = true)
+        public async Task<List<ProductQtyDTO>> GetAvaibleProductQty(bool isAllProduct = true)
         {
-            try
-            {
-                var balance = _context.StockBalance
-                      .Include(i => i.Product)
-                      .GroupBy(a => new { a.ProductId, a.Product.Name })
-                      .Select(s => new ProductQtyDTO
-                      {
-                          ProductId = s.Key.ProductId,
-                          ProductName = s.Key.Name,
-                          Qty = s.Sum(a => a.Qty),
-                      }).ToList();
+            var balance = await _context.StockBalance
+                  .Include(i => i.Product)
+                  .GroupBy(a => new { a.ProductId, a.Product.Name })
+                  .Select(s => new ProductQtyDTO
+                  {
+                      ProductId = s.Key.ProductId,
+                      ProductName = s.Key.Name,
+                      Qty = s.Sum(a => a.Qty),
+                  }).ToListAsync();
 
-                if (isAllProduct)
+            if (isAllProduct)
+            {
+                if (!balance.Any())
                 {
-                    if (!balance.Any())
-                    {
-                        balance.AddRange(
-                            _context.Product
-                            .Where(a => a.IsActive == true)
-                            .Select(s => new ProductQtyDTO
-                            {
-                                ProductId = s.Id,
-                                ProductName = s.Name,
-                                Qty = 0,
-                            }).ToList());
-                    }
-                    else
-                    {
-
-                        balance.AddRange(_context.Product
-                                    .AsEnumerable()
-                                    .Where(a => a.IsActive == true && !balance.Any(s => s.ProductId == a.Id))
-                                    .Select(s => new ProductQtyDTO
-                                    {
-                                        ProductId = s.Id,
-                                        ProductName = s.Name,
-                                        Qty = 0,
-                                    }).ToList());
-                    }
+                    balance.AddRange(
+                        await _context.Product
+                        .Where(a => a.IsActive == true)
+                        .Select(s => new ProductQtyDTO
+                        {
+                            ProductId = s.Id,
+                            ProductName = s.Name,
+                            Qty = 0,
+                        }).ToListAsync());
                 }
+                else
+                {
 
-                return balance;
+                    balance.AddRange(_context.Product
+                                .AsEnumerable()
+                                .Where(a => a.IsActive == true && !balance.Any(s => s.ProductId == a.Id))
+                                .Select(s => new ProductQtyDTO
+                                {
+                                    ProductId = s.Id,
+                                    ProductName = s.Name,
+                                    Qty = 0,
+                                }).ToList());
+                }
             }
-            catch (Exception)
-            {
-                throw;
-            }
+
+            return balance;
         }
-
-
 
     }
 }

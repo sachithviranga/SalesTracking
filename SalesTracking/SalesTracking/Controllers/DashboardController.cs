@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesTracking.Business.Managers;
 using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Common;
+using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
 {
@@ -20,9 +21,9 @@ namespace SalesTracking.Api.Controllers
         }
 
         [HttpGet("GetAvailableProdcuts")]
-        public ServiceResponse GetAvailableProdcuts()
+        public async Task<IActionResult> GetAvailableProdcuts()
         {
-            return _dashboardManager.GetAvailableProdcuts();
+            return Ok(await _dashboardManager.GetAvailableProdcuts());
         }
     }
 }
