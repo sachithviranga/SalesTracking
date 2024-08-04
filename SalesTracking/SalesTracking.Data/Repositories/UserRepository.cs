@@ -30,21 +30,14 @@ namespace SalesTracking.Data.Repositories
 
         public async Task<UserDTO> GetUserByUserName(string email)
         {
-            try
-            {
-                var user = await _context.User
-                    .Where(u => u.Email.ToLower() == email.ToLower())
-                    .Include(a => a.UserRole)
-                    .ThenInclude(i => i.Role)
-                    .ThenInclude(i => i.RoleClaim)
-                    .SingleOrDefaultAsync();
+            var user = await _context.User
+                .Where(u => u.Email.ToLower() == email.ToLower())
+                .Include(a => a.UserRole)
+                .ThenInclude(i => i.Role)
+                .ThenInclude(i => i.RoleClaim)
+                .SingleOrDefaultAsync();
 
-                return _mapper.Map<UserDTO>(user);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return _mapper.Map<UserDTO>(user);
         }
 
         public UserDTO GetUserByUserId(int id)

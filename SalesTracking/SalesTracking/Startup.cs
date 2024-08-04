@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SalesTracking.Api.Extensions;
+using SalesTracking.Api.Middleware;
 using SalesTracking.Common.Common;
 using SalesTracking.Data.Mappers;
 using SalesTracking.Entities.Auth;
@@ -99,6 +100,9 @@ namespace SalesTracking
             #endregion
 
             app.UseHttpsRedirection();
+
+            // Register the custom exception handling middleware
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseRouting();
 

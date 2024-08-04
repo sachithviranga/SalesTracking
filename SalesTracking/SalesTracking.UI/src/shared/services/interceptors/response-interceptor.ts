@@ -25,8 +25,15 @@ export class ResponseInterceptor implements HttpInterceptor {
                 else if (err.status === 401 && this.authtoken.isTokenExpired()) {
                     this.notificationService.showCustomMsg('Session Expired', 'Your session will be refreshed now.', 'error');
                     this.logoutService.logout();
-                } else {
-                    this.router.navigate(['./dashboard', {}]);
+                }
+                else {
+                    if (!this.authtoken.isTokenExpired()) {
+                        this.router.navigate(['./dashboard', {}]);
+                    }
+                    else {
+                        let message = err.error.message
+                        this.notificationService.showCustomMsg('Error', message, 'error');
+                    }
                 }
                 const error = err.error.message || err.statusText;
                 return throwError(() => error);
