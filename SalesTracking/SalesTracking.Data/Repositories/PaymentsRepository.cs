@@ -23,62 +23,38 @@ namespace SalesTracking.Data.Repositories
             _mapper = mapper;
         }
 
-        public List<PaymentDTO> GetPayments()
+        public async Task<List<PaymentDTO>> GetPayments()
         {
-            try
-            {
-                var payments = _context.Payments
-                            .Where(a => a.IsActive == true).ToList();
 
-                return _mapper.Map<List<PaymentDTO>>(payments);
-            }
-            catch
-            {
-                throw;
-            }
+            var payments = await _context.Payments
+                                .Where(a => a.IsActive == true).ToListAsync();
 
-
+            return _mapper.Map<List<PaymentDTO>>(payments);
         }
 
-        public int AddPayments(PaymentDTO payments)
+        public async Task<int> AddPayments(PaymentDTO payments)
         {
-            try
-            {
-                var saveObj = _mapper.Map<Payments>(payments);
-                _context.Payments.Add(saveObj);
-                _context.SaveChanges();
-                return saveObj.Id;
-            }
-            catch
-            {
-                throw;
-
-            }
-
+            var saveObj = _mapper.Map<Payments>(payments);
+            await _context.Payments.AddAsync(saveObj);
+            await _context.SaveChangesAsync();
+            return saveObj.Id;
         }
 
-        public PaymentDTO UpdatePayments(PaymentDTO payments)
+        public async Task<PaymentDTO> UpdatePayments(PaymentDTO payments)
         {
-            try
-            {
-                var updateObj = _context.Payments.FirstOrDefault(a => a.Id == payments.Id);
-                if (updateObj != null)
-                {
-                    updateObj.InvoiceNo = payments.InvoiceNo;
-                    updateObj.ChequeNo = payments.ChequeNo;
-                    updateObj.PaymentTypeId = payments.PaymentTypeId;
-                    updateObj.IsActive = payments.IsActive;
-                    updateObj.UpdateBy = payments.UpdateBy;
-                    updateObj.UpdateDate = payments.UpdateDate;
-                    _context.SaveChanges();
-                }
-                return _mapper.Map<PaymentDTO>(updateObj);
-            }
-            catch
-            {
-                throw;
 
+            var updateObj = await _context.Payments.FirstOrDefaultAsync(a => a.Id == payments.Id);
+            if (updateObj != null)
+            {
+                updateObj.InvoiceNo = payments.InvoiceNo;
+                updateObj.ChequeNo = payments.ChequeNo;
+                updateObj.PaymentTypeId = payments.PaymentTypeId;
+                updateObj.IsActive = payments.IsActive;
+                updateObj.UpdateBy = payments.UpdateBy;
+                updateObj.UpdateDate = payments.UpdateDate;
+                await _context.SaveChangesAsync();
             }
+            return _mapper.Map<PaymentDTO>(updateObj);
         }
     }
 }

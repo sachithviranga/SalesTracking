@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SalesTracking.Contracts.Repositories
 {
-    public interface IMasterDataRepository 
+    public interface IMasterDataRepository
     {
-        public List<PaymentTypeDTO> GetPaymentTypes();
-        public List<CustomerTypeDTO> GetCustomerTypes();
-        public List<ModuleDTO>GetModules();
-        
+        public Task<List<PaymentTypeDTO>> GetPaymentTypes();
+        public Task<List<CustomerTypeDTO>> GetCustomerTypes();
+        public Task<List<ModuleDTO>> GetModules();
+
     }
 }

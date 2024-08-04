@@ -24,145 +24,30 @@ namespace SalesTracking.Data.Repositories
             _mapper = mapper;
         }
 
-        public List<StockPurchaseDTO> GetStock()
+        public async Task<List<StockPurchaseDTO>> GetStock()
         {
-            try
-            {
-                var stock = _context.StockPurchase
-                            .Where(a => a.IsActive == true)
-                            .Include(i => i.StockPurchaseDetails).Include(a => a.StockPurchasePayment)
-                            .OrderByDescending(i => i.Id)
-                            .ToList();
+            var stock = await _context.StockPurchase
+                        .Where(a => a.IsActive == true)
+                        .Include(i => i.StockPurchaseDetails).Include(a => a.StockPurchasePayment)
+                        .OrderByDescending(i => i.Id)
+                        .ToListAsync();
 
-                return _mapper.Map<List<StockPurchaseDTO>>(stock);
-            }
-            catch
-            {
-                throw;
-            }
+            return _mapper.Map<List<StockPurchaseDTO>>(stock);
+        }
 
+        public async Task<int> AddStock(StockPurchaseDTO stock)
+        {
+
+            var saveObj = _mapper.Map<StockPurchase>(stock);
+            await _context.StockPurchase.AddAsync(saveObj);
+            await _context.SaveChangesAsync();
+            return saveObj.Id;
 
         }
 
-        public int AddStock(StockPurchaseDTO stock)
+        public async Task<StockPurchaseDTO> UpdateStock(StockPurchaseDTO stock)
         {
-            try
-            {
-                var saveObj = _mapper.Map<StockPurchase>(stock);
-                _context.StockPurchase.Add(saveObj);
-                _context.SaveChanges();
-                return saveObj.Id;
-            }
-            catch
-            {
-                throw;
-
-            }
-
-        }
-
-        public StockPurchaseDTO UpdateStock(StockPurchaseDTO stock)
-        {
-            try
-            {
-                var updateObj = _context.StockPurchase.FirstOrDefault(a => a.Id == stock.Id);
-                if (updateObj != null)
-                {
-                    _context.Entry(updateObj).Collection(l => l.StockPurchaseDetails).Load();
-
-
-                    if (updateObj.StockPurchaseDetails.Any())
-                    {
-                        _context.RemoveRange(updateObj.StockPurchaseDetails);
-                    }
-
-                    _context.Entry(updateObj).Collection(l => l.StockPurchasePayment).Load();
-
-                    if (updateObj.StockPurchasePayment.Any())
-                    {
-                        _context.RemoveRange(updateObj.StockPurchasePayment);
-
-                    }
-
-                    updateObj.PurchaseNo = stock.PurchaseNo;
-                    updateObj.TransactionDate =  stock.TransactionDate.LocalDateTime.Date;
-                    updateObj.IsActive = stock.IsActive;
-                    updateObj.UpdateBy = stock.UpdateBy;
-                    updateObj.UpdateDate = stock.UpdateDate;
-
-                    if (stock.StockPurchaseDetails.Any())
-                    {
-                        var stockdetails = _mapper.Map<List<StockPurchaseDetails>>(stock.StockPurchaseDetails);
-                        _context.StockPurchaseDetails.AddRange(stockdetails);//455555
-                        foreach (var stockdetail in stockdetails)
-                        {
-                            updateObj.StockPurchaseDetails.Add(stockdetail);
-                        }
-                    }
-
-                    if (stock.StockPurchasePayment.Any())
-                    {
-                        var stockpayments = _mapper.Map<List<StockPurchasePayment>>(stock.StockPurchasePayment);
-                        _context.StockPurchasePayment.AddRange(stockpayments);//455555
-                        foreach (var stockpayment in stockpayments)
-                        {
-                            updateObj.StockPurchasePayment.Add(stockpayment);
-                        }
-                    }
-
-                    _context.StockPurchase.Update(updateObj);
-                    _context.SaveChanges();
-                }
-                return _mapper.Map<StockPurchaseDTO>(updateObj);
-            }
-            catch
-            {
-                throw;
-
-            }
-        }
-
-        public List<StockPurchaseDTO> GetStockPayment()
-        {
-            try
-            {
-                var stockpayment = _context.StockPurchase
-                            .Where(a => a.IsActive == true)
-                            .Include(i => i.StockPurchasePayment)
-                            .ToList();
-
-                return _mapper.Map<List<StockPurchaseDTO>>(stockpayment);
-            }
-            catch
-            {
-                throw;
-            }
-
-
-        }
-
-        public StockPurchaseDTO GetStockById(int id)
-        {
-            try
-            {
-                var stockid = _context.StockPurchase.Where(a => a.Id == id)
-                    .Include(i => i.StockPurchaseDetails).ThenInclude(i => i.Product)
-                    .Include(a => a.StockPurchasePayment).ThenInclude(a => a.PaymentType)
-                    .SingleOrDefault();
-
-                return _mapper.Map<StockPurchaseDTO>(stockid);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public StockPurchaseDTO ApproveStock(StockPurchaseDTO stock)
-        {
-            try
-            {
-                var updateObj = _context.StockPurchase.FirstOrDefault(a => a.Id == stock.Id);
+                var updateObj =await _context.StockPurchase.FirstOrDefaultAsync(a => a.Id == stock.Id);
                 if (updateObj != null)
                 {
                     _context.Entry(updateObj).Collection(l => l.StockPurchaseDetails).Load();
@@ -186,14 +71,11 @@ namespace SalesTracking.Data.Repositories
                     updateObj.IsActive = stock.IsActive;
                     updateObj.UpdateBy = stock.UpdateBy;
                     updateObj.UpdateDate = stock.UpdateDate;
-                    updateObj.ApprovedDate = stock.ApprovedDate;
-                    updateObj.ApprovedBy = stock.ApprovedBy;
-                    updateObj.IsApproved = stock.IsApproved;
 
                     if (stock.StockPurchaseDetails.Any())
                     {
                         var stockdetails = _mapper.Map<List<StockPurchaseDetails>>(stock.StockPurchaseDetails);
-                        _context.StockPurchaseDetails.AddRange(stockdetails);//455555
+                        await _context.StockPurchaseDetails.AddRangeAsync(stockdetails);//455555
                         foreach (var stockdetail in stockdetails)
                         {
                             updateObj.StockPurchaseDetails.Add(stockdetail);
@@ -203,7 +85,7 @@ namespace SalesTracking.Data.Repositories
                     if (stock.StockPurchasePayment.Any())
                     {
                         var stockpayments = _mapper.Map<List<StockPurchasePayment>>(stock.StockPurchasePayment);
-                        _context.StockPurchasePayment.AddRange(stockpayments);//455555
+                        await _context.StockPurchasePayment.AddRangeAsync(stockpayments);//455555
                         foreach (var stockpayment in stockpayments)
                         {
                             updateObj.StockPurchasePayment.Add(stockpayment);
@@ -211,41 +93,102 @@ namespace SalesTracking.Data.Repositories
                     }
 
                     _context.StockPurchase.Update(updateObj);
-                    _context.SaveChanges();
-                    return _mapper.Map<StockPurchaseDTO>(updateObj);
+                     await _context.SaveChangesAsync();
                 }
-                // this.AddStock(stock);
-                else
-                {
-                    var saveObj = _mapper.Map<StockPurchase>(stock);
-                    _context.StockPurchase.Add(saveObj);
-                    _context.SaveChanges();
-                    return _mapper.Map<StockPurchaseDTO>(saveObj);
+                return _mapper.Map<StockPurchaseDTO>(updateObj);
+        }
 
-                }
+        public async Task<List<StockPurchaseDTO>> GetStockPayment()
+        {
 
-               
-            }
-            catch
+                var stockpayment = await _context.StockPurchase
+                            .Where(a => a.IsActive == true)
+                            .Include(i => i.StockPurchasePayment)
+                            .ToListAsync();
+
+                return _mapper.Map<List<StockPurchaseDTO>>(stockpayment);
+
+        }
+
+        public async Task<StockPurchaseDTO> GetStockById(int id)
+        {
+
+                var stock =await _context.StockPurchase.Where(a => a.Id == id)
+                    .Include(i => i.StockPurchaseDetails).ThenInclude(i => i.Product)
+                    .Include(a => a.StockPurchasePayment).ThenInclude(a => a.PaymentType)
+                    .SingleOrDefaultAsync();
+
+                return _mapper.Map<StockPurchaseDTO>(stock);
+
+        }
+
+        public async Task<StockPurchaseDTO> ApproveStock(StockPurchaseDTO stock)
+        {
+            var updateObj = await _context.StockPurchase.FirstOrDefaultAsync(a => a.Id == stock.Id);
+            if (updateObj != null)
             {
-                throw;
+                _context.Entry(updateObj).Collection(l => l.StockPurchaseDetails).Load();
+
+
+                if (updateObj.StockPurchaseDetails.Any())
+                {
+                    _context.RemoveRange(updateObj.StockPurchaseDetails);
+                }
+
+                _context.Entry(updateObj).Collection(l => l.StockPurchasePayment).Load();
+
+                if (updateObj.StockPurchasePayment.Any())
+                {
+                    _context.RemoveRange(updateObj.StockPurchasePayment);
+                }
+
+                updateObj.PurchaseNo = stock.PurchaseNo;
+                updateObj.TransactionDate = stock.TransactionDate.LocalDateTime.Date;
+                updateObj.IsActive = stock.IsActive;
+                updateObj.UpdateBy = stock.UpdateBy;
+                updateObj.UpdateDate = stock.UpdateDate;
+                updateObj.ApprovedDate = stock.ApprovedDate;
+                updateObj.ApprovedBy = stock.ApprovedBy;
+                updateObj.IsApproved = stock.IsApproved;
+
+                if (stock.StockPurchaseDetails.Any())
+                {
+                    var stockdetails = _mapper.Map<List<StockPurchaseDetails>>(stock.StockPurchaseDetails);
+                    _context.StockPurchaseDetails.AddRange(stockdetails);//455555
+                    foreach (var stockdetail in stockdetails)
+                    {
+                        updateObj.StockPurchaseDetails.Add(stockdetail);
+                    }
+                }
+
+                if (stock.StockPurchasePayment.Any())
+                {
+                    var stockpayments = _mapper.Map<List<StockPurchasePayment>>(stock.StockPurchasePayment);
+                    _context.StockPurchasePayment.AddRange(stockpayments);//455555
+                    foreach (var stockpayment in stockpayments)
+                    {
+                        updateObj.StockPurchasePayment.Add(stockpayment);
+                    }
+                }
+
+                _context.StockPurchase.Update(updateObj);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<StockPurchaseDTO>(updateObj);
+            }
+            else
+            {
+                var saveObj = _mapper.Map<StockPurchase>(stock);
+                await _context.StockPurchase.AddAsync(saveObj);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<StockPurchaseDTO>(saveObj);
 
             }
         }
 
-        public List<StockBalanceDTO> GetStockBySellprice(int id)
+        public async Task<List<StockBalanceDTO>> GetStockBySellprice(int id)
         {
-            try
-            {
-                var stock = _context.StockBalance.Where(a => a.ProductId == id).ToList();
-                return _mapper.Map<List<StockBalanceDTO>>(stock);
-            }
-            catch
-            {
-                throw;
-            }
-
-
+            var stock = await _context.StockBalance.Where(a => a.ProductId == id).ToListAsync();
+            return _mapper.Map<List<StockBalanceDTO>>(stock);
         }
     }
 }

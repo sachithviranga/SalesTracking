@@ -24,14 +24,14 @@ namespace SalesTracking.Business.Managers
             _serviceResponseMapper = serviceResponseMapper;
         }
 
-        public ServiceResponse GetPayments()
+        public async Task<ServiceResponse> GetPayments()
         {
             var user = UserContext.Current;
             var returnObj = _paymentsRepository.GetPayments();
             return _serviceResponseMapper.Map(returnObj);
         }
 
-        public ServiceResponse AddPayments(PaymentDTO payments)
+        public async Task<ServiceResponse> AddPayments(PaymentDTO payments)
         {
             payments.CreateDate = DateTime.UtcNow; 
             payments.CreateBy = UserContext.Current;
@@ -39,7 +39,7 @@ namespace SalesTracking.Business.Managers
 
         }
 
-        public ServiceResponse Updatepayments(PaymentDTO payments)
+        public async Task<ServiceResponse> Updatepayments(PaymentDTO payments)
         {
             payments.UpdateDate = DateTime.UtcNow;
             payments.UpdateBy = "system";

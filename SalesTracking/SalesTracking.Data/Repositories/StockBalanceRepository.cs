@@ -26,121 +26,103 @@ namespace SalesTracking.Data.Repositories
         }
 
 
-        public int InsertStockBalance(List<StockBalanceDTO> StockBalances)
+        public async Task<int> InsertStockBalance(List<StockBalanceDTO> StockBalances)
         {
-            try
-            {
-                var saveObj = _mapper.Map<List<StockBalance>>(StockBalances);
-                _context.StockBalance.AddRange(saveObj);
-                return _context.SaveChanges();
-            }
-            catch
-            {
-                throw;
-            }
+            var saveObj = _mapper.Map<List<StockBalance>>(StockBalances);
+            await _context.StockBalance.AddRangeAsync(saveObj);
+            return await _context.SaveChangesAsync();
+
         }
 
-        public bool CheckStockBalance(List<SalesDetailsDTO> CheckstockBalances, DateTime TransactionDate, out List<ProductDTO> products)
+        public async Task<bool> CheckStockBalance(List<SalesDetailsDTO> CheckstockBalances, DateTime TransactionDate, out List<ProductDTO> products)
         {
-            try
-            {
 
-                List<ProductDTO> insufProducts = _context.Product
-                                                .Include(i => i.StockBalance)
-                                                .AsEnumerable()
-                                                .Where(a => CheckstockBalances.Any(x => x.ProductId == a.Id) &&
-                                                 a.StockBalance.Where(s => s.TransactionDate <= TransactionDate).Sum(z => z.Qty) < CheckstockBalances.First(s => s.ProductId == a.Id).Qty)
-                                                .Select(s => new ProductDTO { Id = s.Id, Name = s.Name })
-                                                .ToList();
+            List<ProductDTO> insufProducts = await _context.Product
+                                            .Include(i => i.StockBalance)
+                                            .AsQueryable()
+                                            .Where(a => CheckstockBalances.Any(x => x.ProductId == a.Id) &&
+                                             a.StockBalance.Where(s => s.TransactionDate <= TransactionDate).Sum(z => z.Qty) < CheckstockBalances.First(s => s.ProductId == a.Id).Qty)
+                                            .Select(s => new ProductDTO { Id = s.Id, Name = s.Name })
+                                            .ToListAsync();
 
-                products = insufProducts.ToList();
+            products = insufProducts.ToList();
 
-                return !insufProducts.Any();
+            return !insufProducts.Any();
 
-            }
-            catch
-            {
-                throw;
-            }
         }
 
-        public int UpdateStockBalance(List<StockBalanceDTO> stockbalances, DateTime TransactionDate)
+        public async Task<int> UpdateStockBalance(List<StockBalanceDTO> stockbalances, DateTime TransactionDate)
         {
-            try
+
+            List<StockBalanceDTO> stockBalanceUpd = new();
+
+            foreach (var stockbal in stockbalances)
             {
-                List<StockBalanceDTO> stockBalanceUpd = new();
+                int prodId = stockbal.ProductId;
+                decimal prodQty = stockbal.Qty;
+                decimal balQty = prodQty;
+                decimal updQty = 0;
 
-                foreach (var stockbal in stockbalances)
-                {
-                    int prodId = stockbal.ProductId;
-                    decimal prodQty = stockbal.Qty;
-                    decimal balQty = prodQty;
-                    decimal updQty = 0;
-
-                    var getStockObj = _context.StockBalance
-                        .Where(a => a.ProductId == prodId && a.TransactionDate <= TransactionDate)
-                        .GroupBy(a => new { a.ProductId, a.BatchId })
-                        .Select(a => new
-                        {
-                            a.Key.ProductId,
-                            a.Key.BatchId,
-                            Qty = a.Sum(s => s.Qty),
-                            TransactionDate = a.FirstOrDefault(s => s.Qty > 0).TransactionDate
-                        })
-                        .Where(w => w.Qty > 0)
-                        .OrderBy(o => o.TransactionDate)
-                        .ToList();
-
-                    if (getStockObj != null && getStockObj.Any())
+                var getStockObj = await _context.StockBalance
+                    .Where(a => a.ProductId == prodId && a.TransactionDate <= TransactionDate)
+                    .GroupBy(a => new { a.ProductId, a.BatchId })
+                    .Select(a => new
                     {
-                        foreach (var updBal in getStockObj)
+                        a.Key.ProductId,
+                        a.Key.BatchId,
+                        Qty = a.Sum(s => s.Qty),
+                        TransactionDate = a.FirstOrDefault(s => s.Qty > 0).TransactionDate
+                    })
+                    .Where(w => w.Qty > 0)
+                    .OrderBy(o => o.TransactionDate)
+                    .ToListAsync();
+
+                if (getStockObj != null && getStockObj.Any())
+                {
+                    foreach (var updBal in getStockObj)
+                    {
+
+                        if (balQty > 0)
                         {
+                            int stkQty = updBal.Qty;
+                            var batchId = updBal.BatchId;
 
-                            if (balQty > 0)
+                            if (stkQty > balQty)
                             {
-                                int stkQty = updBal.Qty;
-                                var batchId = updBal.BatchId;
-
-                                if (stkQty > balQty)
-                                {
-                                    updQty = balQty;
-                                    balQty = 0;
-                                }
-                                else
-                                {
-                                    balQty = balQty - stkQty;
-                                    updQty = stkQty;
-                                }
-                                stockBalanceUpd.Add(new StockBalanceDTO
-                                {
-                                    CreateBy = stockbal.CreateBy,
-                                    CreateDate = DateTime.UtcNow,
-                                    IsActive = stockbal.IsActive,
-                                    ProductId = stockbal.ProductId,
-                                    ReferenceId = stockbal.ReferenceId,
-                                    ReferenceLineId = stockbal.ReferenceLineId,
-                                    SellPrice = stockbal.SellPrice,
-                                    UnitPrice = stockbal.UnitPrice,
-                                    TransactionDate = TransactionDate,
-                                    BatchId = batchId,
-                                    Qty = updQty * (-1),
-                                    ReferenceType = stockbal.ReferenceType,
-                                });
-
-                                if (balQty == 0) break;
+                                updQty = balQty;
+                                balQty = 0;
                             }
+                            else
+                            {
+                                balQty = balQty - stkQty;
+                                updQty = stkQty;
+                            }
+                            stockBalanceUpd.Add(new StockBalanceDTO
+                            {
+                                CreateBy = stockbal.CreateBy,
+                                CreateDate = DateTime.UtcNow,
+                                IsActive = stockbal.IsActive,
+                                ProductId = stockbal.ProductId,
+                                ReferenceId = stockbal.ReferenceId,
+                                ReferenceLineId = stockbal.ReferenceLineId,
+                                SellPrice = stockbal.SellPrice,
+                                UnitPrice = stockbal.UnitPrice,
+                                TransactionDate = TransactionDate,
+                                BatchId = batchId,
+                                Qty = updQty * (-1),
+                                ReferenceType = stockbal.ReferenceType,
+                            });
 
+                            if (balQty == 0) break;
                         }
+
                     }
                 }
-                var saveObj = _mapper.Map<List<StockBalance>>(stockBalanceUpd);
-                _context.StockBalance.AddRange(saveObj);
-                return _context.SaveChanges();
             }
-            catch
-            {
-                throw;
-            }
+            var saveObj = _mapper.Map<List<StockBalance>>(stockBalanceUpd);
+            await _context.StockBalance.AddRangeAsync(saveObj);
+            return await _context.SaveChangesAsync();
+
         }
 
         public async Task<List<ProductQtyDTO>> GetAvaibleProductQty(bool isAllProduct = true)

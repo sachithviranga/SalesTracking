@@ -10,10 +10,10 @@ namespace SalesTracking.Contracts.Managers
 {
     public interface ISalesManager
     {
-        public ServiceResponse GetSales();
-        public ServiceResponse AddSales(SalesDTO sales);
-        public ServiceResponse UpdateSales(SalesDTO sales);
-        public ServiceResponse ApproveSales(SalesDTO sales);
-        public ServiceResponse GetSalesById(int id);
+        public Task<ServiceResponse> GetSales();
+        public Task<ServiceResponse> AddSales(SalesDTO sales);
+        public Task<ServiceResponse> UpdateSales(SalesDTO sales);
+        public Task<ServiceResponse> ApproveSales(SalesDTO sales);
+        public Task<ServiceResponse> GetSalesById(int id);
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Common;
 using SalesTracking.Entities.Payment;
+using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
 {
@@ -21,22 +22,22 @@ namespace SalesTracking.Api.Controllers
 
 
         [HttpGet("GetPayments")]
-        public ServiceResponse GetPayments()
+        public async Task<IActionResult> GetPayments()
         {
-            return _paymentsrepository.GetPayments();
+            return Ok(await _paymentsrepository.GetPayments());
         }
 
         [HttpPost("AddPayments")]
-        public ServiceResponse AddPayments([FromBody] PaymentDTO payments)
+        public async Task<IActionResult> AddPayments([FromBody] PaymentDTO payments)
         {
-            return _paymentsrepository.AddPayments(payments);
+            return Ok(await _paymentsrepository.AddPayments(payments));
         }
 
         [HttpPatch("UpdatePayments")]
 
-        public ServiceResponse UpdatePayments([FromBody] PaymentDTO payments)
+        public async Task<IActionResult>  UpdatePayments([FromBody] PaymentDTO payments)
         {
-            return _paymentsrepository.Updatepayments(payments);
+            return Ok(await _paymentsrepository.Updatepayments(payments));
 
         }
     }

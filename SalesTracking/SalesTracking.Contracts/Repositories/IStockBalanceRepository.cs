@@ -11,11 +11,11 @@ namespace SalesTracking.Contracts.Repositories
 {
     public interface IStockBalanceRepository
     {
-        public int InsertStockBalance(List<StockBalanceDTO> StockBalances);
+        public Task<int> InsertStockBalance(List<StockBalanceDTO> StockBalances);
 
-        public int UpdateStockBalance(List<StockBalanceDTO> Stockbalances, DateTime TransactionDate);
+        public Task<int> UpdateStockBalance(List<StockBalanceDTO> Stockbalances, DateTime TransactionDate);
 
-        public bool CheckStockBalance(List<SalesDetailsDTO> CheckstockBalances, DateTime TransactionDate, out List<ProductDTO> Products);
+        public Task<bool> CheckStockBalance(List<SalesDetailsDTO> CheckstockBalances, DateTime TransactionDate, out List<ProductDTO> Products);
 
         public Task<List<ProductQtyDTO>> GetAvaibleProductQty(bool IsAllProduct = true);
     }

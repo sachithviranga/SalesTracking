@@ -10,14 +10,14 @@ namespace SalesTracking.Contracts.Repositories
 {
     public interface IStockRepository
     {
-        public List<StockPurchaseDTO> GetStock();
-        public int AddStock(StockPurchaseDTO stock);
-        public StockPurchaseDTO UpdateStock(StockPurchaseDTO stock);
-        public List<StockPurchaseDTO> GetStockPayment();
-        public StockPurchaseDTO GetStockById(int id);
+        public Task<List<StockPurchaseDTO>> GetStock();
+        public Task<int> AddStock(StockPurchaseDTO stock);
+        public Task<StockPurchaseDTO> UpdateStock(StockPurchaseDTO stock);
+        public Task<List<StockPurchaseDTO>> GetStockPayment();
+        public Task<StockPurchaseDTO> GetStockById(int id);
 
-        public StockPurchaseDTO ApproveStock(StockPurchaseDTO stock);
+        public Task<StockPurchaseDTO> ApproveStock(StockPurchaseDTO stock);
 
-        public List<StockBalanceDTO> GetStockBySellprice(int id);
+        public Task<List<StockBalanceDTO>> GetStockBySellprice(int id);
     }
 }

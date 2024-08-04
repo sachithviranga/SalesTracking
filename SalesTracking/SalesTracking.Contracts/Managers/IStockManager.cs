@@ -10,18 +10,18 @@ namespace SalesTracking.Contracts.Managers
 {
     public interface IStockManager
     {
-        public ServiceResponse GetStock();
+        public Task<ServiceResponse> GetStock();
 
-        public ServiceResponse AddStock(StockPurchaseDTO stock);
+        public Task<ServiceResponse> AddStock(StockPurchaseDTO stock);
 
-        public ServiceResponse UpdateStock(StockPurchaseDTO stock);
+        public Task<ServiceResponse> UpdateStock(StockPurchaseDTO stock);
 
-        public ServiceResponse GetStockPayment();
+        public Task<ServiceResponse> GetStockPayment();
 
-        public ServiceResponse GetStockById(int id);
+        public Task<ServiceResponse> GetStockById(int id);
 
-        public ServiceResponse ApproveStock(StockPurchaseDTO stock);
+        public Task<ServiceResponse> ApproveStock(StockPurchaseDTO stock);
 
-        public ServiceResponse GetStockBySellprice(int id);
+        public Task<ServiceResponse> GetStockBySellprice(int id);
     }
 }

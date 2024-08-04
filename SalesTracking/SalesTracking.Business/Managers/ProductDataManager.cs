@@ -25,15 +25,15 @@ namespace SalesTracking.Business.Managers
             _serviceResponseMapper = serviceResponseMapper;
         }
 
-        public ServiceResponse GetProducts()
+        public async Task<ServiceResponse> GetProducts()
         {
-            var returnObj = _productDataRepository.GetProducts();
+            var returnObj =await _productDataRepository.GetProducts();
             return _serviceResponseMapper.Map(returnObj);
         }
 
         
 
-        public ServiceResponse AddProduct(ProductDTO product)
+        public async Task<ServiceResponse> AddProduct(ProductDTO product)
         {
             product.CreateDate = DateTime.UtcNow;
             product.CreateBy = UserContext.Current;
@@ -50,7 +50,7 @@ namespace SalesTracking.Business.Managers
             return _serviceResponseMapper.Map(_productDataRepository.AddProduct(product));
 
         }
-        public ServiceResponse UpdateProduct(ProductDTO product)
+        public async Task<ServiceResponse> UpdateProduct(ProductDTO product)
         {
             product.UpdateDate = DateTime.UtcNow;
             product.UpdateBy = UserContext.Current;
@@ -79,13 +79,13 @@ namespace SalesTracking.Business.Managers
             return _serviceResponseMapper.Map(_productDataRepository.UpdateProduct(product));
         }
 
-        public ServiceResponse GetProductById(int id)
+        public async Task<ServiceResponse> GetProductById(int id)
         {
             var returnObj = _productDataRepository.GetProductById(id);
             return _serviceResponseMapper.Map(returnObj);
         }
 
-        public ServiceResponse GetSellingPriceByItem(int itemId)
+        public async Task<ServiceResponse> GetSellingPriceByItem(int itemId)
         {
             var returnObj = _productDataRepository.GetSellingPriceByItem(itemId); 
             return _serviceResponseMapper.Map(returnObj);

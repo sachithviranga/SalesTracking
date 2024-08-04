@@ -9,10 +9,10 @@ namespace SalesTracking.Contracts.Repositories
 {
     public  interface IPaymentsRepository
     {
-        public List<PaymentDTO> GetPayments();
+        public Task<List<PaymentDTO>> GetPayments();
 
-        public int AddPayments(PaymentDTO payments);
+        public Task<int> AddPayments(PaymentDTO payments);
 
-        public PaymentDTO UpdatePayments(PaymentDTO payments);
+        public Task<PaymentDTO> UpdatePayments(PaymentDTO payments);
     }
 }

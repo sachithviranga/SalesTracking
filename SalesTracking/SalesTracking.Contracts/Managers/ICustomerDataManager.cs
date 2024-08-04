@@ -12,7 +12,7 @@ namespace SalesTracking.Contracts.Managers
     {
         public Task<ServiceResponse> GetCustomers();
 
-        Task<ServiceResponse> AddCustomer(CustomerDTO customer);
+        public Task<ServiceResponse> AddCustomer(CustomerDTO customer);
 
         public Task<ServiceResponse> UpdateCustomer(CustomerDTO customer);
 

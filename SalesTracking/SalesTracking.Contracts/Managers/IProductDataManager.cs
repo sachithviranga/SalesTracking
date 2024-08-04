@@ -10,15 +10,15 @@ namespace SalesTracking.Contracts.Managers
 {
     public  interface IProductDataManager
     {
-        public ServiceResponse GetProducts();
+        public Task<ServiceResponse> GetProducts();
 
-        public ServiceResponse AddProduct(ProductDTO product);
+        public Task<ServiceResponse> AddProduct(ProductDTO product);
 
-        public ServiceResponse UpdateProduct(ProductDTO product);
+        public Task<ServiceResponse> UpdateProduct(ProductDTO product);
 
-        public ServiceResponse GetProductById(int id);
+        public Task<ServiceResponse> GetProductById(int id);
 
-        public ServiceResponse GetSellingPriceByItem(int id);
+        public Task<ServiceResponse> GetSellingPriceByItem(int id);
         
 
 
