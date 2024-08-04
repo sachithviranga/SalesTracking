@@ -5,6 +5,7 @@ using SalesTracking.Business.Managers;
 using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Common;
 using SalesTracking.Entities.Customer;
+using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
 {
@@ -20,31 +21,31 @@ namespace SalesTracking.Api.Controllers
             _customerDataRepository = customerDataRepository;
         }
 
-      
+
         [HttpGet("GetCustomers")]
-        public ServiceResponse GetCustomers()
+        public async Task<IActionResult> GetCustomers()
         {
-            return _customerDataRepository.GetCustomers();
+            return Ok(await _customerDataRepository.GetCustomers());
         }
 
         [HttpPost("AddCustomer")]
-        public ServiceResponse AddCustomer([FromBody]CustomerDTO customer )
+        public async Task<IActionResult> AddCustomer([FromBody] CustomerDTO customer)
         {
-            return _customerDataRepository.AddCustomer(customer);
+            return Ok(await _customerDataRepository.AddCustomer(customer));
         }
 
         [HttpPost("UpdateCustomer")]
 
-        public ServiceResponse UpdateCustomer([FromBody] CustomerDTO customer)
+        public async Task<IActionResult> UpdateCustomer([FromBody] CustomerDTO customer)
         {
-            return _customerDataRepository.UpdateCustomer(customer);
+            return Ok(await _customerDataRepository.UpdateCustomer(customer));
 
         }
 
         [HttpGet("GetCustomerById")]
-        public ServiceResponse GetCustomerById(int id)
+        public async Task<IActionResult> GetCustomerById(int id)
         {
-            return _customerDataRepository.GetCustomerById(id);
+            return Ok(await _customerDataRepository.GetCustomerById(id));
         }
 
     }
