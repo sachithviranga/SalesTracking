@@ -21,40 +21,35 @@ namespace SalesTracking.Api.Controllers
             _productDataRepository = productDataRepository;
         }
         [HttpGet("GetProducts")]
-        public async Task<ServiceResponse> GetProducts()
+        public async Task<IActionResult> GetProducts()
         {
-            return await _productDataRepository.GetProducts();
+            return Ok(await _productDataRepository.GetProducts());
         }
 
         [HttpPost("AddProduct")]
-        public async Task<ServiceResponse> AddProduct([FromBody] ProductDTO product)
+        public async Task<IActionResult> AddProduct([FromBody] ProductDTO product)
         {
-            return await _productDataRepository.AddProduct(product);
+            return Ok(await _productDataRepository.AddProduct(product));
         }
 
         [HttpPost("UpdateProduct")]
 
-        public async Task<ServiceResponse> UpdateProduct([FromBody]ProductDTO product ) 
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO product)
         {
-            return _productDataRepository.UpdateProduct(product);
+            return Ok(await _productDataRepository.UpdateProduct(product));
 
         }
 
         [HttpGet("GetProductById")]
-        public async Task<ServiceResponse> GetProductById(int id)
+        public async Task<IActionResult> GetProductById(int id)
         {
-            return _productDataRepository.GetProductById(id);
+            return Ok(await _productDataRepository.GetProductById(id));
         }
 
         [HttpGet("GetSellingPriceByItem")]
-        public async Task<ServiceResponse> GetSellingPriceByItem(int id) 
+        public async Task<IActionResult> GetSellingPriceByItem(int id)
         {
-            return _productDataRepository.GetSellingPriceByItem(id);
+            return Ok(await _productDataRepository.GetSellingPriceByItem(id));
         }
-
-
-
-
-
     }
 }

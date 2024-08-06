@@ -31,13 +31,13 @@ namespace SalesTracking.Business.Managers
             _authHelper = authHelper;
         }
 
-        public ServiceResponse GetUsers()
+        public async Task<ServiceResponse> GetUsers()
         {
-            var returnObj = _userRepository.GetUsers();
-            return _serviceResponseMapper.Map(returnObj);
+            var returnObj = await _userRepository.GetUsers();
+            return  _serviceResponseMapper.Map(returnObj);
         }
 
-        public ServiceResponse AddUser(UserDTO user)
+        public async Task<ServiceResponse> AddUser(UserDTO user)
         {
             user.Id = 0;
             user.Password = _authHelper.EncryptPassword(user.Password);
@@ -52,18 +52,18 @@ namespace SalesTracking.Business.Managers
                 a.CreateDate = DateTime.UtcNow;
             });
     
-            return _serviceResponseMapper.Map(_userRepository.AddUser(user));
+            return _serviceResponseMapper.Map(await _userRepository.AddUser(user));
 
         }
 
-        public ServiceResponse GetUserByUserId( int id)
+        public async Task<ServiceResponse> GetUserByUserId( int id)
         {
-            var returnObj = _userRepository.GetUserByUserId(id);
+            var returnObj = await _userRepository.GetUserByUserId(id);
             return _serviceResponseMapper.Map(returnObj);
         }
 
 
-        public ServiceResponse UpdateUser(UserDTO user)
+        public async Task<ServiceResponse> UpdateUser(UserDTO user)
         {
             user.UpdateDate = DateTime.UtcNow;
             user.UpdateBy = UserContext.Current;
@@ -81,7 +81,7 @@ namespace SalesTracking.Business.Managers
                     a.CreateDate = DateTime.UtcNow;
                 }
             });
-            return _serviceResponseMapper.Map(_userRepository.UpdateUser(user));
+            return _serviceResponseMapper.Map(await _userRepository.UpdateUser(user));
         }
 
     }

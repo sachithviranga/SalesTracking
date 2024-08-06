@@ -28,7 +28,7 @@ namespace SalesTracking.Business.Managers
             _serviceResponseMapper = serviceResponseMapper;
         }
 
-        public ServiceResponse AddRole(RoleDTO role)
+        public async Task<ServiceResponse> AddRole(RoleDTO role)
         {
             role.CreateDate = DateTime.UtcNow;
             role.CreateBy = UserContext.Current;
@@ -41,17 +41,17 @@ namespace SalesTracking.Business.Managers
                 a.CreateDate = DateTime.UtcNow;
             });
 
-            return _serviceResponseMapper.Map(_roleDataRepository.AddRole(role));
+            return _serviceResponseMapper.Map(await _roleDataRepository.AddRole(role));
 
         }
 
-        public ServiceResponse GetRoles()
+        public async Task<ServiceResponse> GetRoles()
         {
-            var returnObj = _roleDataRepository.GetRoles();
+            var returnObj = await _roleDataRepository.GetRoles();
             return _serviceResponseMapper.Map(returnObj);
         }
 
-        public ServiceResponse UpdateRole(RoleDTO role)
+        public async Task<ServiceResponse> UpdateRole(RoleDTO role)
         {
             role.UpdateDate = DateTime.UtcNow;
             role.UpdateBy = UserContext.Current;
@@ -71,12 +71,12 @@ namespace SalesTracking.Business.Managers
                 }
             });
 
-            return _serviceResponseMapper.Map(_roleDataRepository.UpdateRole(role));
+            return _serviceResponseMapper.Map(await _roleDataRepository.UpdateRole(role));
         }
 
-        public ServiceResponse GetRoleById(int id)
+        public async Task<ServiceResponse> GetRoleById(int id)
         {
-            var returnObj = _roleDataRepository.GetRoleById(id);
+            var returnObj =await _roleDataRepository.GetRoleById(id);
             return _serviceResponseMapper.Map(returnObj);
         }
     }

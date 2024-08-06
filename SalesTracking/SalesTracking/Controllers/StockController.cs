@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Common;
 using SalesTracking.Entities.Stock;
+using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
 {
@@ -20,51 +21,51 @@ namespace SalesTracking.Api.Controllers
         }
 
         [HttpGet("GetStock")]
-        public ServiceResponse GetStock()
+        public async Task<IActionResult> GetStock()
         {
-            return _stockmanager.GetStock();
+            return Ok(await _stockmanager.GetStock());
         }
 
 
         [HttpPost("AddStock")]
-        public ServiceResponse AddStock([FromBody] StockPurchaseDTO stock)
+        public async Task<IActionResult> AddStock([FromBody] StockPurchaseDTO stock)
         {
-            return _stockmanager.AddStock(stock);
+            return Ok(await _stockmanager.AddStock(stock));
         }
 
         [HttpPost("UpdateStock")]
 
-        public ServiceResponse UpdateStock([FromBody] StockPurchaseDTO stock)
+        public async Task<IActionResult> UpdateStock([FromBody] StockPurchaseDTO stock)
         {
-            return _stockmanager.UpdateStock(stock);
+            return Ok(await _stockmanager.UpdateStock(stock));
 
         }
 
         [HttpGet("GetStockPayment")]
-        public ServiceResponse GetStockPayment()
+        public async Task<IActionResult> GetStockPayment()
         {
-            return _stockmanager.GetStockPayment();
+            return Ok(await _stockmanager.GetStockPayment());
         }
 
         [HttpGet("GetStockById")]
-        public ServiceResponse GetStockById(int id)
+        public async Task<IActionResult> GetStockById(int id)
         {
-            return _stockmanager.GetStockById(id);
+            return Ok(await _stockmanager.GetStockById(id));
         }
 
 
         [HttpPost("ApproveStock")]
 
-        public ServiceResponse ApproveStock([FromBody] StockPurchaseDTO stock)
+        public async Task<IActionResult> ApproveStock([FromBody] StockPurchaseDTO stock)
         {
-            return _stockmanager.ApproveStock(stock);
+            return Ok(await _stockmanager.ApproveStock(stock));
 
         }
 
         [HttpGet("GetStockBySellprice")]
-        public ServiceResponse GetStockBySellprice(int id)
+        public async Task<IActionResult> GetStockBySellprice(int id)
         {
-            return _stockmanager.GetStockBySellprice(id);
+            return Ok(await _stockmanager.GetStockBySellprice(id));
         }
 
     }

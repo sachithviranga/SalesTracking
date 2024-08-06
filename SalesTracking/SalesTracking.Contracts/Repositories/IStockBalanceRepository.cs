@@ -15,7 +15,7 @@ namespace SalesTracking.Contracts.Repositories
 
         public Task<int> UpdateStockBalance(List<StockBalanceDTO> Stockbalances, DateTime TransactionDate);
 
-        public Task<bool> CheckStockBalance(List<SalesDetailsDTO> CheckstockBalances, DateTime TransactionDate, out List<ProductDTO> Products);
+        public Task<(bool, List<ProductDTO>)> CheckStockBalance(List<SalesDetailsDTO> CheckstockBalances, DateTime TransactionDate);
 
         public Task<List<ProductQtyDTO>> GetAvaibleProductQty(bool IsAllProduct = true);
     }

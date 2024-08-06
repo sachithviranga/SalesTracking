@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SalesTracking.Business.Managers;
 using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Common;
 using SalesTracking.Entities.Customer;
 using SalesTracking.Entities.User;
+using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserDataController : ControllerBase
     {
         private readonly IUserDataManager _userDataManager;
@@ -20,32 +23,30 @@ namespace SalesTracking.Api.Controllers
         }
 
         [HttpGet("GetUsers")]
-        public ServiceResponse GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            return _userDataManager.GetUsers();
+            return Ok(await _userDataManager.GetUsers());
         }
 
 
         [HttpPost("AddUser")]
-        public ServiceResponse AddUser([FromBody] UserDTO user) 
+        public async Task<IActionResult> AddUser([FromBody] UserDTO user) 
         {
-            return _userDataManager.AddUser(user);
+            return Ok(await _userDataManager.AddUser(user));
         }
 
         [HttpPost("UpdateUser")]
 
-        public ServiceResponse UpdateUser([FromBody] UserDTO user)
+        public async Task<IActionResult> UpdateUser([FromBody] UserDTO user)
         {
-            return _userDataManager.UpdateUser(user);
+            return Ok(await _userDataManager.UpdateUser(user));
 
         }
 
         [HttpGet("GetUserByUserId")]
-        public ServiceResponse GetUserByUserId(int id)
+        public async Task<IActionResult> GetUserByUserId(int id)
         {
-            return _userDataManager.GetUserByUserId(id);
+            return Ok(await _userDataManager.GetUserByUserId(id));
         }
-
-
     }
 }

@@ -34,7 +34,7 @@ namespace SalesTracking.Data.Repositories
 
         }
 
-        public async Task<bool> CheckStockBalance(List<SalesDetailsDTO> CheckstockBalances, DateTime TransactionDate, out List<ProductDTO> products)
+        public async Task<(bool, List<ProductDTO>)> CheckStockBalance(List<SalesDetailsDTO> CheckstockBalances, DateTime TransactionDate)
         {
 
             List<ProductDTO> insufProducts = await _context.Product
@@ -45,9 +45,9 @@ namespace SalesTracking.Data.Repositories
                                             .Select(s => new ProductDTO { Id = s.Id, Name = s.Name })
                                             .ToListAsync();
 
-            products = insufProducts.ToList();
+            List<ProductDTO> products = insufProducts.ToList();
 
-            return !insufProducts.Any();
+            return (!insufProducts.Any(), products);
 
         }
 

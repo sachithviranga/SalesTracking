@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Common;
 using SalesTracking.Entities.Sales;
+using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
 {
@@ -20,38 +21,37 @@ namespace SalesTracking.Api.Controllers
         }
 
         [HttpGet("GetSales")]
-        public ServiceResponse GetSales()
+        public async Task<IActionResult> GetSales()
         {
-            return _salesmanager.GetSales();
+            return Ok(await _salesmanager.GetSales());
         }
 
         [HttpPost("AddSales")]
-        public ServiceResponse AddSales([FromBody] SalesDTO sales)
+        public async Task<IActionResult> AddSales([FromBody] SalesDTO sales)
         {
-            return _salesmanager.AddSales(sales);
+            return Ok(await _salesmanager.AddSales(sales));
         }
 
         [HttpPost("UpdateSales")]
 
-        public ServiceResponse UpdateSales([FromBody] SalesDTO sales)
+        public async Task<IActionResult> UpdateSales([FromBody] SalesDTO sales)
         {
-            return _salesmanager.UpdateSales(sales);
+            return Ok(await _salesmanager.UpdateSales(sales));
 
         }
 
         [HttpGet("GetSalesById")]
 
-        public ServiceResponse GetSalesById(int id) 
+        public async Task<IActionResult> GetSalesById(int id) 
         {
-            return _salesmanager.GetSalesById(id);
+            return Ok(await _salesmanager.GetSalesById(id));
         }
 
         [HttpPost("ApproveSales")]
 
-        public ServiceResponse ApproveSales([FromBody] SalesDTO sales)
+        public async Task<IActionResult> ApproveSales([FromBody] SalesDTO sales)
         {
-            return _salesmanager.ApproveSales(sales);
-
+            return Ok(await _salesmanager.ApproveSales(sales));
         }
     }
 }
