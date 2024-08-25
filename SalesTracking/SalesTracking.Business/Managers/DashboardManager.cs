@@ -3,6 +3,7 @@ using SalesTracking.Contracts.Managers;
 using SalesTracking.Contracts.Repositories;
 using SalesTracking.Data.Repositories;
 using SalesTracking.Entities.Common;
+using SalesTracking.Entities.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,9 @@ namespace SalesTracking.Business.Managers
             _serviceResponseMapper = serviceResponseMapper;
         }
 
-        public async Task<ServiceResponse> GetAvailableProdcuts()
+        public async Task<List<ProductQtyDTO>> GetAvailableProdcuts()
         {
-            return _serviceResponseMapper.Map(await _stockBalanceRepository.GetAvaibleProductQty());
+            return await _stockBalanceRepository.GetAvaibleProductQty();
         }
     }
 }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using SalesTracking.Business.Managers;
 using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Common;
+using SalesTracking.Entities.Product;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
@@ -21,6 +23,8 @@ namespace SalesTracking.Api.Controllers
         }
 
         [HttpGet("GetAvailableProdcuts")]
+        [ProducesResponseType(typeof(List<ProductQtyDTO>), 200)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetAvailableProdcuts()
         {
             return Ok(await _dashboardManager.GetAvailableProdcuts());

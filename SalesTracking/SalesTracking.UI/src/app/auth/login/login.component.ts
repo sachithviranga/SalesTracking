@@ -8,6 +8,10 @@ import { DataService } from 'src/shared/services/data.service';
 import { AuthTokenHandlerService } from 'src/shared/services/global/authenciation-token-handler';
 import { NotificationService } from 'src/shared/services/global/notification-service';
 import { RegX } from 'src/shared/utilities/regex.common';
+import { AuthService } from 'src/open-api-client/api/api'
+import { LoginResponse } from 'src/open-api-client';
+import { Store } from '@ngrx/store';
+import * as AuthActions from 'src/app/store/auth/auth.actions';
 
 @Component({
   selector: 'app-auth-login',
@@ -18,8 +22,10 @@ import { RegX } from 'src/shared/utilities/regex.common';
 export class LoginComponent extends BaseComponent {
   @BlockUI() blockUI: NgBlockUI;
   constructor(private dataService: DataService, private router: Router
-    , private authTokenService: AuthTokenHandlerService,
-    public override notificationService: NotificationService) {
+    , private authTokenService: AuthTokenHandlerService
+    , public override notificationService: NotificationService
+    , private authService: AuthService
+    , private store: Store) {
     super(notificationService);
   }
 
@@ -33,12 +39,20 @@ export class LoginComponent extends BaseComponent {
     if (this.loginForm.valid) {
       this.blockUI.start('Please Wait...');
       let data = this.loginForm.getRawValue();
-      this.dataService
-        .getAllByPost(url, data)
-        .pipe(finalize(() => this.blockUI.stop()))
-        .subscribe((data: any) => {
-          this.handleResponse(data)
-        });
+      this.store.dispatch(AuthActions.login({loginDTO: { passWord: data.password, userName: data.userName }}))
+
+      // this.authService.apiAuthLoginPost({ passWord: data.password, userName: data.userName }).pipe(finalize(() => this.blockUI.stop()))
+      //   .subscribe((returnData: LoginResponse) => {
+      //     debugger;
+      //     this.handleResponse(returnData);
+      //   });
+
+      // this.dataService
+      //   .getAllByPost(url, data)
+      //   .pipe(finalize(() => this.blockUI.stop()))
+      //   .subscribe((data: any) => {
+      //     this.handleResponse(data)
+      //   });
     }
     else {
       this.notificationService.showWarningMsg('Please fill required fields.');

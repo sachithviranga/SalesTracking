@@ -1,4 +1,5 @@
 ﻿using SalesTracking.Entities.Common;
+using SalesTracking.Entities.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace SalesTracking.Contracts.Managers
 {
     public interface IDashboardManager
     {
-        public Task<ServiceResponse> GetAvailableProdcuts();
+        public Task<List<ProductQtyDTO>> GetAvailableProdcuts();
     }
 }
