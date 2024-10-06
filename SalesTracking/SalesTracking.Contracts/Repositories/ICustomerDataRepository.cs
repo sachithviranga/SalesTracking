@@ -10,12 +10,12 @@ namespace SalesTracking.Contracts.Repositories
 {
     public  interface ICustomerDataRepository
     {
-        public List<CustomerDTO> GetCustomers();
-        public int AddCustomer(CustomerDTO customer);
+        public Task<List<CustomerDTO>> GetCustomers();
+        public Task<int> AddCustomer(CustomerDTO customer);
 
-        public CustomerDTO UpdateCustomer(CustomerDTO customer);
+        public Task<CustomerDTO> UpdateCustomer(CustomerDTO customer);
 
-        public CustomerDTO GetCustomerById(int id);
+        public Task<CustomerDTO> GetCustomerById(int id);
     }
 
     

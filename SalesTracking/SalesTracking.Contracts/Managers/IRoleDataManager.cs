@@ -10,12 +10,12 @@ namespace SalesTracking.Contracts.Managers
 {
     public interface IRoleDataManager
     {
-        public ServiceResponse GetRoles();
+        public Task<ServiceResponse> GetRoles();
 
-        public ServiceResponse AddRole(RoleDTO role);
+        public Task<ServiceResponse> AddRole(RoleDTO role);
 
-        public ServiceResponse UpdateRole(RoleDTO role);
+        public Task<ServiceResponse> UpdateRole(RoleDTO role);
 
-        public ServiceResponse GetRoleById(int id);
+        public Task<ServiceResponse> GetRoleById(int id);
     }
 }

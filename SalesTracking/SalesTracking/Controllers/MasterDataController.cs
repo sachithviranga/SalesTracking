@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Common;
+using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
 {
@@ -19,22 +20,22 @@ namespace SalesTracking.Api.Controllers
         }
 
         [HttpGet("GetPaymentTypes")]
-        public ServiceResponse GetPaymentTypes()
+        public async Task<IActionResult> GetPaymentTypes()
         {
-            return _masterDataManager.GetPaymentTypes();
+            return Ok(await _masterDataManager.GetPaymentTypes());
         }
 
         [HttpGet("GetCustomerTypes")]
-        public ServiceResponse GetCustomerTypes()
+        public async Task<IActionResult> GetCustomerTypes()
         {
-            return _masterDataManager.GetCustomerTypes();
+            return Ok(await _masterDataManager.GetCustomerTypes());
         }
 
         [HttpGet("GetModules")]
 
-        public ServiceResponse GetModules()
+        public async Task<IActionResult> GetModules()
         {
-            return _masterDataManager.GetModules();
+            return Ok(await _masterDataManager.GetModules());
         }
 
     }

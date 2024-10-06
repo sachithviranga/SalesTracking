@@ -7,6 +7,7 @@ using SalesTracking.Entities.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,28 +28,26 @@ namespace SalesTracking.Business.Managers
             _serviceResponseMapper = serviceResponseMapper;
         }
 
-        public LoginResponse Login(LoginDTO login)
+        public async Task<LoginResponse> Login(LoginDTO login)
         {
-            var user = _userRepository.GetUserByUserName(login.UserName);
+            var user = await _userRepository.GetUserByUserName(login.UserName);
             string token = string.Empty;
-            bool canLogin = false;
             string errorMessage = string.Empty;
             if (user != null && _authHelper.VerifyPassword(login.PassWord, user.Password))
             {
                 token = _authHelper.GenerateToken(user);
-                canLogin   = true;
+                return new LoginResponse
+                {
+                    AccessToken = token,
+                    CanLogin = true,
+                    LoginValidationMessage = errorMessage,
+                };
             }
             else
             {
                 errorMessage = "The user name or password is incorrect";
+                throw new InvalidCredentialException(errorMessage);
             }
-
-            return new LoginResponse
-            {
-                AccessToken = token,
-                CanLogin = canLogin,
-                LoginValidationMessage = errorMessage,
-            };
         }
     }
 }

@@ -9,10 +9,10 @@ namespace SalesTracking.Contracts.Managers
 {
     public interface IMasterDataManager
     {
-        public ServiceResponse GetPaymentTypes();
-        public ServiceResponse GetCustomerTypes();
+        public Task<ServiceResponse> GetPaymentTypes();
+        public Task<ServiceResponse> GetCustomerTypes();
 
-        public ServiceResponse GetModules();
+        public Task<ServiceResponse> GetModules();
         
     }
 }

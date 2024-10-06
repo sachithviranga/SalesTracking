@@ -23,9 +23,9 @@ namespace SalesTracking.Business.Managers
             _serviceResponseMapper = serviceResponseMapper;
         }
 
-        public ServiceResponse GetAvailableProdcuts()
+        public async Task<ServiceResponse> GetAvailableProdcuts()
         {
-            return _serviceResponseMapper.Map(_stockBalanceRepository.GetAvaibleProductQty());
+            return _serviceResponseMapper.Map(await _stockBalanceRepository.GetAvaibleProductQty());
         }
     }
 }

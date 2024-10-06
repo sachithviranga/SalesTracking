@@ -10,10 +10,10 @@ namespace SalesTracking.Contracts.Managers
 {
     public interface IPaymentsManager
     {
-        public ServiceResponse GetPayments();
+        public Task<ServiceResponse> GetPayments();
 
-        public ServiceResponse AddPayments(PaymentDTO payments);
+        public Task<ServiceResponse> AddPayments(PaymentDTO payments);
 
-        public ServiceResponse Updatepayments(PaymentDTO payments);
+        public Task<ServiceResponse> Updatepayments(PaymentDTO payments);
     }
 }

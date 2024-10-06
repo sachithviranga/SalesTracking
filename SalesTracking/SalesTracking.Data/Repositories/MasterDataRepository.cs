@@ -24,51 +24,26 @@ namespace SalesTracking.Data.Repositories
             _mapper = mapper;
         }
 
-        public List<PaymentTypeDTO> GetPaymentTypes()
+        public async Task<List<PaymentTypeDTO>> GetPaymentTypes()
         {
-            try
-            {
-                var paymentTypes = _context.PaymentType.Where(a => a.IsActive == true).ToList();
-                return _mapper.Map<List<PaymentTypeDTO>>(paymentTypes);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            var paymentTypes = await _context.PaymentType.Where(a => a.IsActive == true).ToListAsync();
+            return _mapper.Map<List<PaymentTypeDTO>>(paymentTypes);
         }
 
-        public List<CustomerTypeDTO> GetCustomerTypes()
+        public async Task<List<CustomerTypeDTO>> GetCustomerTypes()
         {
-            try
-            {
-                var customerTypes = _context.CustomerType.Where(a => a.IsActive == true).ToList();
-
-                return _mapper.Map<List<CustomerTypeDTO>>(customerTypes);
-
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var customerTypes = await _context.CustomerType.Where(a => a.IsActive == true).ToListAsync();
+            return _mapper.Map<List<CustomerTypeDTO>>(customerTypes);
         }
 
-        public List<ModuleDTO> GetModules()
+        public async Task<List<ModuleDTO>> GetModules()
         {
-            try
-            {
-                var modules = _context.Module.Where(a => a.IsActive == true)
-                                        .Include(i => i.Claim)
-                                        .ToList();
 
-                return _mapper.Map<List<ModuleDTO>>(modules);
-            }
-            catch (Exception)
-            {
+            var modules = await _context.Module.Where(a => a.IsActive == true)
+                                    .Include(i => i.Claim)
+                                    .ToListAsync();
+            return _mapper.Map<List<ModuleDTO>>(modules);
 
-                throw;
-            }
         }
     }
 }

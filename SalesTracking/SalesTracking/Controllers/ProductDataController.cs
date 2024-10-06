@@ -5,12 +5,13 @@ using SalesTracking.Contracts.Managers;
 using SalesTracking.Entities.Common;
 using SalesTracking.Entities.Customer;
 using SalesTracking.Entities.Product;
+using System.Threading.Tasks;
 
 namespace SalesTracking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize]
+    [Authorize]
     public class ProductDataController : ControllerBase
     {
         private readonly IProductDataManager _productDataRepository;
@@ -20,40 +21,35 @@ namespace SalesTracking.Api.Controllers
             _productDataRepository = productDataRepository;
         }
         [HttpGet("GetProducts")]
-        public ServiceResponse GetProducts()
+        public async Task<IActionResult> GetProducts()
         {
-            return _productDataRepository.GetProducts();
+            return Ok(await _productDataRepository.GetProducts());
         }
 
         [HttpPost("AddProduct")]
-        public ServiceResponse AddProduct([FromBody] ProductDTO product)
+        public async Task<IActionResult> AddProduct([FromBody] ProductDTO product)
         {
-            return _productDataRepository.AddProduct(product);
+            return Ok(await _productDataRepository.AddProduct(product));
         }
 
         [HttpPost("UpdateProduct")]
 
-        public ServiceResponse UpdateProduct([FromBody]ProductDTO product ) 
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO product)
         {
-            return _productDataRepository.UpdateProduct(product);
+            return Ok(await _productDataRepository.UpdateProduct(product));
 
         }
 
         [HttpGet("GetProductById")]
-        public ServiceResponse GetProductById(int id)
+        public async Task<IActionResult> GetProductById(int id)
         {
-            return _productDataRepository.GetProductById(id);
+            return Ok(await _productDataRepository.GetProductById(id));
         }
 
         [HttpGet("GetSellingPriceByItem")]
-        public ServiceResponse GetSellingPriceByItem(int id) 
+        public async Task<IActionResult> GetSellingPriceByItem(int id)
         {
-            return _productDataRepository.GetSellingPriceByItem(id);
+            return Ok(await _productDataRepository.GetSellingPriceByItem(id));
         }
-
-
-
-
-
     }
 }

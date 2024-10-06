@@ -24,20 +24,20 @@ namespace SalesTracking.Business.Managers
             _serviceResponseMapper = serviceResponseMapper;
         }
 
-        public ServiceResponse GetPaymentTypes()
+        public async Task<ServiceResponse> GetPaymentTypes()
         {
-            var returnObj = _masterDataRepository.GetPaymentTypes();
+            var returnObj = await _masterDataRepository.GetPaymentTypes();
             return _serviceResponseMapper.Map(returnObj);
         }
-        public ServiceResponse GetCustomerTypes() 
+        public async Task<ServiceResponse> GetCustomerTypes()
         {
-            var returnObj = _masterDataRepository.GetCustomerTypes();
+            var returnObj = await _masterDataRepository.GetCustomerTypes();
             return _serviceResponseMapper.Map(returnObj);
         }
 
-        public ServiceResponse GetModules()
+        public async Task<ServiceResponse> GetModules()
         {
-            return _serviceResponseMapper.Map(_masterDataRepository.GetModules());
+            return _serviceResponseMapper.Map(await _masterDataRepository.GetModules());
         }
     }
 }

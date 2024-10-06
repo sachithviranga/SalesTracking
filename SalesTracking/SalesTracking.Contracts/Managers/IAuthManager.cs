@@ -10,6 +10,6 @@ namespace SalesTracking.Contracts.Managers
 {
     public interface IAuthManager
     {
-        public LoginResponse Login(LoginDTO login);
+        public Task<LoginResponse> Login(LoginDTO login);
     }
 }

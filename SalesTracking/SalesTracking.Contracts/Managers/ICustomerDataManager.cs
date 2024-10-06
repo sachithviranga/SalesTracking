@@ -10,12 +10,12 @@ namespace SalesTracking.Contracts.Managers
 {
     public interface ICustomerDataManager
     {
-        public ServiceResponse GetCustomers();
+        public Task<ServiceResponse> GetCustomers();
 
-        ServiceResponse AddCustomer(CustomerDTO customer);
+        public Task<ServiceResponse> AddCustomer(CustomerDTO customer);
 
-        public ServiceResponse UpdateCustomer(CustomerDTO customer);
+        public Task<ServiceResponse> UpdateCustomer(CustomerDTO customer);
 
-        public ServiceResponse GetCustomerById(int id);
+        public Task<ServiceResponse> GetCustomerById(int id);
     }
 }

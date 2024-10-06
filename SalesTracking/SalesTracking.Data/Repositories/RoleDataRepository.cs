@@ -25,87 +25,55 @@ namespace SalesTracking.Data.Repositories
             _mapper = mapper;
         }
 
-        public List<RoleDTO> GetRoles()
+        public async Task<List<RoleDTO>> GetRoles()
         {
-            try
-            {
-                var roles = _context.Role.Where(a => a.IsActive == true && a.RoleName != "Super Admin").ToList();
-                return _mapper.Map<List<RoleDTO>>(roles);
-            }
-            catch
-            {
-                throw;
-
-            }
+            var roles = await _context.Role.Where(a => a.IsActive == true && a.RoleName != "Super Admin").ToListAsync();
+            return _mapper.Map<List<RoleDTO>>(roles);
         }
 
-        public int AddRole(RoleDTO role)
+        public async Task<int> AddRole(RoleDTO role)
         {
-            try
-            {
-                var saveObj = _mapper.Map<Role>(role);
-                _context.Role.Add(saveObj);
-                _context.SaveChanges();
-                return saveObj.Id;
-            }
-            catch
-            {
-                throw;
-
-            }
-
+            var saveObj = _mapper.Map<Role>(role);
+            await _context.Role.AddAsync(saveObj);
+            await _context.SaveChangesAsync();
+            return saveObj.Id;
         }
 
-        public RoleDTO UpdateRole(RoleDTO role)
+        public async Task<RoleDTO> UpdateRole(RoleDTO role)
         {
-            try
-            {
-                var updateObj = _context.Role.FirstOrDefault(a => a.Id == role.Id);
+            var updateObj = await _context.Role.FirstOrDefaultAsync(a => a.Id == role.Id);
 
-                if (updateObj != null)
+            if (updateObj != null)
+            {
+                _context.Entry(updateObj).Collection(l => l.RoleClaim).Load();
+
+                if (updateObj.RoleClaim.Any())
                 {
-                    _context.Entry(updateObj).Collection(l => l.RoleClaim).Load();
-
-                    if (updateObj.RoleClaim.Any())
-                    {
-                        _context.RemoveRange(updateObj.RoleClaim);
-                    }
-
-                    updateObj.IsActive = role.IsActive;
-                    updateObj.UpdateBy = role.UpdateBy;
-                    updateObj.UpdateDate = role.UpdateDate;
-
-                    if (role.RoleClaim.Any())
-                    {
-                        var roleclaims = _mapper.Map<List<RoleClaim>>(role.RoleClaim);
-                        updateObj.RoleClaim = roleclaims;
-                    }
-                    _context.Role.Update(updateObj);
-                    _context.SaveChanges();
+                    _context.RemoveRange(updateObj.RoleClaim);
                 }
-                return _mapper.Map<RoleDTO>(updateObj);
-            }
-            catch
-            {
-                throw;
 
+                updateObj.IsActive = role.IsActive;
+                updateObj.UpdateBy = role.UpdateBy;
+                updateObj.UpdateDate = role.UpdateDate;
+
+                if (role.RoleClaim.Any())
+                {
+                    var roleclaims = _mapper.Map<List<RoleClaim>>(role.RoleClaim);
+                    updateObj.RoleClaim = roleclaims;
+                }
+                _context.Role.Update(updateObj);
+                await _context.SaveChangesAsync();
             }
+            return _mapper.Map<RoleDTO>(updateObj);
         }
 
-        public RoleDTO GetRoleById(int id)
+        public async Task<RoleDTO> GetRoleById(int id)
         {
-            try
-            {
-                var roleid = _context.Role.Where(a => a.Id == id)
-                     .Include(a => a.RoleClaim)
-                     .SingleOrDefault();
+            var roleid = await _context.Role.Where(a => a.Id == id)
+                 .Include(a => a.RoleClaim)
+                 .SingleOrDefaultAsync();
 
-                return _mapper.Map<RoleDTO>(roleid);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return _mapper.Map<RoleDTO>(roleid);
         }
 
     }

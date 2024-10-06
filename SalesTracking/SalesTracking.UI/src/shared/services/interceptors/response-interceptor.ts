@@ -9,8 +9,8 @@ import { Injectable } from "@angular/core";
 @Injectable()
 export class ResponseInterceptor implements HttpInterceptor {
 
-    constructor(private logoutService: LogoutHandlerService, private authtoken: AuthTokenHandlerService, 
-        private router: Router,private notificationService: NotificationService) {
+    constructor(private logoutService: LogoutHandlerService, private authtoken: AuthTokenHandlerService,
+        private router: Router, private notificationService: NotificationService) {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -19,20 +19,30 @@ export class ResponseInterceptor implements HttpInterceptor {
                 if (evt instanceof HttpResponse) { }
             }),
             catchError(err => {
-                debugger;
-                if (err.status === 401 && this.authtoken.isTokenExpired()) {
-                    this.notificationService.showCustomMsg('Session Expired' , 'Your session will be refreshed now.', 'error');
-                    this.logoutService.logout();              
-                } else {
-                    this.router.navigate(['./dashboard', {}]);
+                if (err.status === 0) {
+                    this.notificationService.showCustomMsg('Connection Error', 'Connection error please contact adminstrator.', 'error');
+                }
+                else if (err.status === 401 && this.authtoken.isTokenExpired()) {
+                    if (err.error.login)
+                        this.notificationService.showCustomMsg('Invalid Credential', err.error.message, 'error');
+                    else {
+                        this.notificationService.showCustomMsg('Session Expired', 'Your session will be refreshed now.', 'error');
+                        this.logoutService.logout();
+                    }
+                }
+                else {
+                    if (!this.authtoken.isTokenExpired()) this.router.navigate(['./dashboard', {}]);
+                    else {
+                        let message = err.error.message
+                        this.notificationService.showCustomMsg('Error', message, 'error');
+                    }
                 }
                 const error = err.error.message || err.statusText;
-                return throwError(error);
                 return throwError(() => error);
             }), map(event => {
-                debugger;
                 if (event instanceof HttpResponse) {
-                    if (event.body.isError == true && event.body.statusCode == 403) { this.router.navigate(['./dashboard', {}]);} }
+                    if (event.body.isError == true && event.body.statusCode == 403) { this.router.navigate(['./dashboard', {}]); }
+                }
                 return event;
             }));
     }

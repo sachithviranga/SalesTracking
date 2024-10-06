@@ -11,11 +11,11 @@ namespace SalesTracking.Contracts.Repositories
 {
     public interface IRoleDataRepository
     {
-        public List<RoleDTO> GetRoles();
-        public int AddRole(RoleDTO role);
+        public Task<List<RoleDTO>> GetRoles();
+        public Task<int> AddRole(RoleDTO role);
         
-        public RoleDTO UpdateRole(RoleDTO role);
+        public Task<RoleDTO> UpdateRole(RoleDTO role);
 
-        public RoleDTO GetRoleById(int id);
+        public Task<RoleDTO> GetRoleById(int id);
     }
 }

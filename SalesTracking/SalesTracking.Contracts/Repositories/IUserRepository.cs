@@ -12,13 +12,13 @@ namespace SalesTracking.Contracts.Repositories
 {
     public interface IUserRepository
     {
-        public UserDTO GetUserByUserName(string email);
-        public List<UserDTO> GetUsers();
+        public Task<UserDTO> GetUserByUserName(string email);
+        public Task<List<UserDTO>> GetUsers();
 
-        public int AddUser(UserDTO user);
+        public Task<int> AddUser(UserDTO user);
 
-        public UserDTO UpdateUser(UserDTO user);
+        public Task<UserDTO> UpdateUser(UserDTO user);
 
-        public UserDTO GetUserByUserId(int id);
+        public Task<UserDTO> GetUserByUserId(int id);
     }
 }

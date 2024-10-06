@@ -28,117 +28,76 @@ namespace SalesTracking.Data.Repositories
             _mapper = mapper;
         }
 
-        public UserDTO GetUserByUserName(string email)
+        public async Task<UserDTO> GetUserByUserName(string email)
         {
-            try
-            {
-                var user = _context.User
-                    .Where(u => u.Email.ToLower() == email.ToLower())
-                    .Include(a => a.UserRole)
-                    .ThenInclude(i => i.Role)
-                    .ThenInclude(i => i.RoleClaim)
-                    .SingleOrDefault();
+            var user = await _context.User
+                .Where(u => u.Email.ToLower() == email.ToLower())
+                .Include(a => a.UserRole)
+                .ThenInclude(i => i.Role)
+                .ThenInclude(i => i.RoleClaim)
+                .SingleOrDefaultAsync();
 
-                return _mapper.Map<UserDTO>(user);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return _mapper.Map<UserDTO>(user);
         }
 
-        public UserDTO GetUserByUserId(int id)
+        public async Task<UserDTO> GetUserByUserId(int id)
         {
-            try
-            {
-                var user = _context.User
-                    .Where(u => u.Id == id)
-                    .Include(a => a.UserRole)
-                    .SingleOrDefault();
 
-                return _mapper.Map<UserDTO>(user);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+            var user = await _context.User
+                .Where(u => u.Id == id)
+                .Include(a => a.UserRole)
+                .SingleOrDefaultAsync();
 
-        public List<UserDTO> GetUsers()
-        {
-            try
-            {
-                var user = _context.User.Where(a => a.IsActive == true && a.Email != "superadmin@salestracking.com").ToList();
-                return _mapper.Map<List<UserDTO>>(user);
-
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        public int AddUser(UserDTO user)
-        {
-            try
-            {
-                var saveObj = _mapper.Map<User>(user);
-                _context.User.Add(saveObj);
-                _context.SaveChanges();
-                return saveObj.Id;
-            }
-            catch
-            {
-                throw;
-
-            }
+            return _mapper.Map<UserDTO>(user);
 
         }
 
-        public UserDTO UpdateUser(UserDTO user)
+        public async Task<List<UserDTO>> GetUsers()
         {
-            try
+
+            var user = await _context.User.Where(a => a.IsActive == true && a.Email != "superadmin@salestracking.com").ToListAsync();
+            return _mapper.Map<List<UserDTO>>(user);
+
+        }
+
+        public async Task<int> AddUser(UserDTO user)
+        {
+
+            var saveObj = _mapper.Map<User>(user);
+            await _context.User.AddAsync(saveObj);
+            await _context.SaveChangesAsync();
+            return saveObj.Id;
+
+        }
+
+        public async Task<UserDTO> UpdateUser(UserDTO user)
+        {
+            var updateObj = await _context.User.FirstOrDefaultAsync(a => a.Id == user.Id);
+            if (updateObj != null)
             {
-                var updateObj = _context.User.FirstOrDefault(a => a.Id == user.Id);
+                _context.Entry(updateObj).Collection(l => l.UserRole).Load();
 
-
-
-                if (updateObj != null)
+                if (updateObj.UserRole.Any())
                 {
-                    _context.Entry(updateObj).Collection(l => l.UserRole).Load();
-
-                    if (updateObj.UserRole.Any())
-                    {
-                        _context.RemoveRange(updateObj.UserRole);
-                    }
-
-                    updateObj.FirstName = user.FirstName;
-                    updateObj.LastName = user.LastName;
-                    updateObj.PhoneNumber = user.PhoneNumber;
-                    updateObj.IsActive = user.IsActive;
-                    updateObj.UpdateBy = user.UpdateBy;
-                    updateObj.UpdateDate = user.UpdateDate;
-
-                    if (user.UserRole.Any())
-                    {
-                        var userroles = _mapper.Map<List<UserRole>>(user.UserRole);
-                        updateObj.UserRole = userroles;
-                        //_context.UserRole.AddRange(userroles);
-                        //foreach (var roledetail in userroles)
-                        //{
-                        //    updateObj.UserRole.Add(roledetail);
-                        //}  
-                    }
-                    _context.User.Update(updateObj);
-                    _context.SaveChanges();
+                    _context.RemoveRange(updateObj.UserRole);
                 }
-                return _mapper.Map<UserDTO>(updateObj);
-            }
-            catch
-            {
-                throw;
 
+                updateObj.FirstName = user.FirstName;
+                updateObj.LastName = user.LastName;
+                updateObj.PhoneNumber = user.PhoneNumber;
+                updateObj.IsActive = user.IsActive;
+                updateObj.UpdateBy = user.UpdateBy;
+                updateObj.UpdateDate = user.UpdateDate;
+
+                if (user.UserRole.Any())
+                {
+                    var userroles = _mapper.Map<List<UserRole>>(user.UserRole);
+                    updateObj.UserRole = userroles;
+                }
+                _context.User.Update(updateObj);
+                await _context.SaveChangesAsync();
             }
+            return _mapper.Map<UserDTO>(updateObj);
         }
     }
 }

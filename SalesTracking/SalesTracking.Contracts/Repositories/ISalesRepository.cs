@@ -10,11 +10,11 @@ namespace SalesTracking.Contracts.Repositories
 {
     public interface ISalesRepository
     {
-        public List<SalesDTO> GetSales();
-        public int AddSales(SalesDTO sales);
-        public SalesDTO UpdateSales(SalesDTO sales);
-        public SalesDTO ApproveSales(SalesDTO sales);
-        public SalesDTO GetSalesById(int id);
+        public Task<List<SalesDTO>> GetSales();
+        public Task<int> AddSales(SalesDTO sales);
+        public Task<SalesDTO> UpdateSales(SalesDTO sales);
+        public Task<SalesDTO> ApproveSales(SalesDTO sales);
+        public Task<SalesDTO> GetSalesById(int id);
 
        
     }

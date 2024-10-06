@@ -10,11 +10,11 @@ namespace SalesTracking.Contracts.Repositories
 {
     public interface IProductDataRepository
     {
-        public List<ProductDTO> GetProducts();
-        public int AddProduct(ProductDTO product);
-        public ProductDTO UpdateProduct(ProductDTO product);
-        public ProductDTO GetProductById(int id);
-        public ProductPriceDTO GetSellingPriceByItem(int id);
+        public Task<List<ProductDTO>> GetProducts();
+        public Task<int> AddProduct(ProductDTO product);
+        public Task<ProductDTO> UpdateProduct(ProductDTO product);
+        public Task<ProductDTO> GetProductById(int id);
+        public Task<ProductPriceDTO> GetSellingPriceByItem(int id);
         
     }
 }
