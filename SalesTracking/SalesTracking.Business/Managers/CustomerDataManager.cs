@@ -6,6 +6,7 @@ using SalesTracking.Data.Repositories;
 using SalesTracking.Entities.Common;
 using SalesTracking.Entities.Customer;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SalesTracking.Business.Managers
@@ -22,30 +23,28 @@ namespace SalesTracking.Business.Managers
             _serviceResponseMapper = serviceResponseMapper;
         }
 
-        public async Task<ServiceResponse> GetCustomers()
+        public async Task<List<CustomerDTO>> GetCustomers()
         {
-            var returnObj = await _customerDataRepository.GetCustomers();
-            return _serviceResponseMapper.Map(returnObj);
+            return await _customerDataRepository.GetCustomers();
         }
 
-        public async Task<ServiceResponse> AddCustomer(CustomerDTO customer)
+        public async Task<int> AddCustomer(CustomerDTO customer)
         {
             customer.CreateDate = DateTime.UtcNow;
             customer.CreateBy = UserContext.Current;
-            return _serviceResponseMapper.Map(await _customerDataRepository.AddCustomer(customer));
+            return await _customerDataRepository.AddCustomer(customer);
         }
 
-        public async Task<ServiceResponse> UpdateCustomer(CustomerDTO customer)
+        public async Task<CustomerDTO> UpdateCustomer(CustomerDTO customer)
         {
             customer.UpdateDate = DateTime.UtcNow;
             customer.UpdateBy = UserContext.Current;
-            return _serviceResponseMapper.Map(await _customerDataRepository.UpdateCustomer(customer));
+            return await _customerDataRepository.UpdateCustomer(customer);
         }
 
-        public async Task<ServiceResponse> GetCustomerById(int id)
+        public async Task<CustomerDTO> GetCustomerById(int id)
         {
-            var returnObj = await _customerDataRepository.GetCustomerById(id);
-            return _serviceResponseMapper.Map(returnObj);
+            return await _customerDataRepository.GetCustomerById(id);
         }
     }
 }
