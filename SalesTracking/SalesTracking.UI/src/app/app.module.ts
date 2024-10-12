@@ -18,6 +18,7 @@ import { PaginationConfigService } from 'src/shared/services/global/pagination-c
 import { LogoutHandlerService } from 'src/shared/services/global/logout-handler.service';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { ResponseInterceptor } from 'src/shared/services/interceptors/response-interceptor';
+import { AppStoreModule } from './store/store.module';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ResponseInterceptor } from 'src/shared/services/interceptors/response-i
     BlockUIModule.forRoot({ template: BlockUITemplateComponent }),
     NgxPermissionsModule.forRoot(),
     SharedModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AppStoreModule
   ],
   providers: [Configuration, DataService,
     StorageHandlerService, AuthTokenHandlerService,
