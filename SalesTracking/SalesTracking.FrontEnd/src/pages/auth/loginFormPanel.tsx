@@ -14,7 +14,6 @@ function LoginFormPanel() {
     const { getValues, handleSubmit } = methods
 
     const submit = () => {
-        debugger
         const values = getValues()
         dispatch(login({ userName: values.username, passWord: values.password }))
     }
