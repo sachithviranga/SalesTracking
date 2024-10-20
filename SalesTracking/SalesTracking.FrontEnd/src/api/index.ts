@@ -12,7 +12,22 @@
  * Do not edit the class manually.
  */
 
+import axios from "axios";
 
 export * from "./api";
 export * from "./configuration";
 
+import {  AuthApiFactory as getAuthEndPoint  } from './index'
+import { Configuration } from "./configuration";
+
+const baseURL = process.env.BASE_API_URL ?? 'https://localhost:44391'
+
+const api = axios.create({
+    baseURL : baseURL
+})
+
+const config = new Configuration({
+    // some settings
+  })
+
+export const authApi = getAuthEndPoint(config , baseURL , api)
