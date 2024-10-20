@@ -23,7 +23,14 @@ import { Configuration } from "./configuration";
 const baseURL = process.env.BASE_API_URL ?? 'https://localhost:44391'
 
 const api = axios.create({
-    baseURL : baseURL
+    baseURL : baseURL ,
+    withCredentials: true,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Access-Control-Allow-Origin': '*'
+    }
 })
 
 const config = new Configuration({
